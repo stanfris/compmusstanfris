@@ -1,0 +1,272 @@
+---
+title: "Compmusrmd"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    logo: Images/logo.png
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(spotifyr)
+library(leaflet)
+library(leaflet.extras)
+
+Monkey_city <- get_playlist_audio_features("", "6KwA52G2dp9P7MWkJY3JUA")
+TD_6 <- get_playlist_audio_features("", "2lpTXCxSbaSvTBgVrtbdqt")
+TD_5 <- get_playlist_audio_features("", "0AUei7z6FpCCUCsj9QhTCv")
+Battles_2 <- get_playlist_audio_features("", "6f9bDISBNqZQ9HVP3TIqUB")
+```
+
+
+Project Overview
+=====================================
+Column {data-width=300}
+-----------------------------------------------------------------------
+### Bloons TD 5 {height=50%}
+```{r picture_2, echo = F, fig.cap = "A classic 'Bloons' game, place monkey towers to defeat the balloons and prevent them from reaching the exit", fig.width=5, fig.height=3}
+knitr::include_graphics("images/btd5.jpg")
+```
+
+### Bloons Monkey City {height=50%}
+```{r picture_1, echo = F, fig.cap = "A strategy game where players slowly upgrade their Monkey base", fig.width=5, fig.height=3}
+knitr::include_graphics("images/bmkcity.jpg")
+```
+
+Column {data-width=300}
+-----------------------------------------------------------------------
+### Bloons TD 6 {height=50%}
+```{r picture_3, echo = F, fig.cap = "The newest edition of the classic tower defense mode, it contains many different levels and types of monkeys", fig.width=5, fig.height=3}
+knitr::include_graphics("images/btd6.jpg")
+```
+### Bloons TD Battles 2 {height=50%}
+```{r picture_4, echo = F, fig.cap = "A battle mode of bloons tower defense 6, where players compete against each other to see who survives the longest", fig.width=5, fig.height=3}
+knitr::include_graphics("images/btd_battles_2.jpg")
+```
+
+Column {data-width=400}
+-----------------------------------------------------------------------
+### Description
+Overview per Game
+=====================================
+
+Column {.sidebar data-width=500}
+-------------------------------------
+### Description
+```{r}
+```
+
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+
+
+### Plot_1 
+You can also embed plots, for example:
+
+
+```{r static_plot, fig.width=10, fig.height=6}
+awards <-
+  bind_rows(
+    Monkey_city |> mutate(category = "Bloons Monkey City"),
+  )
+
+awards |>                    # Start with awards.
+  mutate(
+    mode = ifelse(mode == 0, "Minor", "Major")
+  ) |>
+  ggplot(                     # Set up the plot.
+    aes(
+      x = valence,
+      y = energy,
+      size = loudness,
+      colour = mode
+    )
+  ) +
+  geom_point() +              # Scatter plot.
+  geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
+  facet_wrap(~ category) +    # Separate charts per playlist.
+  scale_x_continuous(         # Fine-tune the x axis.
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
+    minor_breaks = NULL       # Remove 'minor' grid-lines.
+  ) +
+  scale_y_continuous(         # Fine-tune the y axis in the same way.
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),
+    minor_breaks = NULL
+  ) +
+  scale_colour_brewer(        # Use the Color Brewer to choose a palette.
+    type = "qual",            # Qualitative set.
+    palette = "Paired"        # Name of the palette is 'Paired'.
+  ) +
+  scale_size_continuous(      # Fine-tune the sizes of each point.
+    trans = "exp",            # Use an exp transformation to emphasise loud.
+    guide = "none"            # Remove the legend for size.
+  ) +
+  theme_light() +             # Use a simpler theme.
+  labs(                       # Make the titles nice.
+    x = "Valence",
+    y = "Energy",
+    colour = "Mode"
+  )
+```
+ 
+### Plot_2 {.tabset .tabset-dropdown}
+You can also embed plots, for example:
+
+
+```{r static_plot_2, fig.width=10, fig.height=6}
+awards <-
+  bind_rows(
+    Battles_2 |> mutate(category = "Bloons TD Battles 2"),
+  )
+
+awards |>                    # Start with awards.
+  mutate(
+    mode = ifelse(mode == 0, "Minor", "Major")
+  ) |>
+  ggplot(                     # Set up the plot.
+    aes(
+      x = valence,
+      y = energy,
+      size = loudness,
+      colour = mode
+    )
+  ) +
+  geom_point() +              # Scatter plot.
+  geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
+  facet_wrap(~ category) +    # Separate charts per playlist.
+  scale_x_continuous(         # Fine-tune the x axis.
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
+    minor_breaks = NULL       # Remove 'minor' grid-lines.
+  ) +
+  scale_y_continuous(         # Fine-tune the y axis in the same way.
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),
+    minor_breaks = NULL
+  ) +
+  scale_colour_brewer(        # Use the Color Brewer to choose a palette.
+    type = "qual",            # Qualitative set.
+    palette = "Paired"        # Name of the palette is 'Paired'.
+  ) +
+  scale_size_continuous(      # Fine-tune the sizes of each point.
+    trans = "exp",            # Use an exp transformation to emphasise loud.
+    guide = "none"            # Remove the legend for size.
+  ) +
+  theme_light() +             # Use a simpler theme.
+  labs(                       # Make the titles nice.
+    x = "Valence",
+    y = "Energy",
+    colour = "Mode"
+  )
+```
+
+
+### Plot_3 {.tabset .tabset-dropdown}
+You can also embed plots, for example:
+
+
+```{r static_plot_3, fig.width=10, fig.height=6}
+awards <-
+  bind_rows(
+    TD_6 |> mutate(category = "Bloons TD 6"),
+  )
+
+awards |>                    # Start with awards.
+  mutate(
+    mode = ifelse(mode == 0, "Minor", "Major")
+  ) |>
+  ggplot(                     # Set up the plot.
+    aes(
+      x = valence,
+      y = energy,
+      size = loudness,
+      colour = mode
+    )
+  ) +
+  geom_point() +              # Scatter plot.
+  geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
+  facet_wrap(~ category) +    # Separate charts per playlist.
+  scale_x_continuous(         # Fine-tune the x axis.
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
+    minor_breaks = NULL       # Remove 'minor' grid-lines.
+  ) +
+  scale_y_continuous(         # Fine-tune the y axis in the same way.
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),
+    minor_breaks = NULL
+  ) +
+  scale_colour_brewer(        # Use the Color Brewer to choose a palette.
+    type = "qual",            # Qualitative set.
+    palette = "Paired"        # Name of the palette is 'Paired'.
+  ) +
+  scale_size_continuous(      # Fine-tune the sizes of each point.
+    trans = "exp",            # Use an exp transformation to emphasise loud.
+    guide = "none"            # Remove the legend for size.
+  ) +
+  theme_light() +             # Use a simpler theme.
+  labs(                       # Make the titles nice.
+    x = "Valence",
+    y = "Energy",
+    colour = "Mode"
+  )
+```
+
+### Plot_4 {.tabset .tabset-dropdown}
+You can also embed plots, for example:
+
+
+```{r static_plot_4, fig.width=10, fig.height=6}
+awards <-
+  bind_rows(
+    TD_5 |> mutate(category = "Bloons TD 5")
+  )
+
+awards |>                    # Start with awards.
+  mutate(
+    mode = ifelse(mode == 0, "Minor", "Major")
+  ) |>
+  ggplot(                     # Set up the plot.
+    aes(
+      x = valence,
+      y = energy,
+      size = loudness,
+      colour = mode
+    )
+  ) +
+  geom_point() +              # Scatter plot.
+  geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
+  facet_wrap(~ category) +    # Separate charts per playlist.
+  scale_x_continuous(         # Fine-tune the x axis.
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
+    minor_breaks = NULL       # Remove 'minor' grid-lines.
+  ) +
+  scale_y_continuous(         # Fine-tune the y axis in the same way.
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),
+    minor_breaks = NULL
+  ) +
+  scale_colour_brewer(        # Use the Color Brewer to choose a palette.
+    type = "qual",            # Qualitative set.
+    palette = "Paired"        # Name of the palette is 'Paired'.
+  ) +
+  scale_size_continuous(      # Fine-tune the sizes of each point.
+    trans = "exp",            # Use an exp transformation to emphasise loud.
+    guide = "none"            # Remove the legend for size.
+  ) +
+  theme_light() +             # Use a simpler theme.
+  labs(                       # Make the titles nice.
+    x = "Valence",
+    y = "Energy",
+    colour = "Mode"
+  )
+```
+
+Details
+=====================================
