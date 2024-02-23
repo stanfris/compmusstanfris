@@ -1,71 +1,144 @@
 ---
 title: "Compmusrmd"
+runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
     logo: Images/logo.png
+    storyboard: true
 ---
 
 ```{r setup, include=FALSE}
+library(compmus)
+library(shiny)
 library(flexdashboard)
 library(tidyverse)
+library(tidymodels)
 library(spotifyr)
 library(leaflet)
 library(leaflet.extras)
+library(cowplot)
+library(stringr)
 
 Monkey_city <- get_playlist_audio_features("", "6KwA52G2dp9P7MWkJY3JUA")
 TD_6 <- get_playlist_audio_features("", "2lpTXCxSbaSvTBgVrtbdqt")
-TD_5 <- get_playlist_audio_features("", "0AUei7z6FpCCUCsj9QhTCv")
-Battles_2 <- get_playlist_audio_features("", "6f9bDISBNqZQ9HVP3TIqUB")
-```
+TD_5 <- get_playlist_audio_features("", "6f9bDISBNqZQ9HVP3TIqUB")
+Battles_2 <- get_playlist_audio_features("", "0AUei7z6FpCCUCsj9QhTCv")
 
+Monkey_city$Game <- "Bloons Monkey City"
+TD_6$Game <- "Bloons TD 6"
+TD_5$Game <- "Bloons TD 5"
+Battles_2$Game <- "Bloons TD Battles 2"
+
+full_set <- rbind(Monkey_city, TD_6, TD_5, Battles_2)
+```
 
 Project Overview
 =====================================
 Column {data-width=300}
 -----------------------------------------------------------------------
-### Bloons TD 5 {height=50%}
+### Bloons TD 5 {data-height=300}
 ```{r picture_2, echo = F, fig.cap = "A classic 'Bloons' game, place monkey towers to defeat the balloons and prevent them from reaching the exit", fig.width=5, fig.height=3}
 knitr::include_graphics("images/btd5.jpg")
 ```
 
-### Bloons Monkey City {height=50%}
+### Bloons Monkey City 
 ```{r picture_1, echo = F, fig.cap = "A strategy game where players slowly upgrade their Monkey base", fig.width=5, fig.height=3}
 knitr::include_graphics("images/bmkcity.jpg")
 ```
 
 Column {data-width=300}
 -----------------------------------------------------------------------
-### Bloons TD 6 {height=50%}
+### Bloons TD 6 
 ```{r picture_3, echo = F, fig.cap = "The newest edition of the classic tower defense mode, it contains many different levels and types of monkeys", fig.width=5, fig.height=3}
 knitr::include_graphics("images/btd6.jpg")
 ```
-### Bloons TD Battles 2 {height=50%}
+### Bloons TD Battles 2 
 ```{r picture_4, echo = F, fig.cap = "A battle mode of bloons tower defense 6, where players compete against each other to see who survives the longest", fig.width=5, fig.height=3}
 knitr::include_graphics("images/btd_battles_2.jpg")
 ```
 
-Column {data-width=400}
------------------------------------------------------------------------
+Column {.sidebar data-width=400}
+-------------------------------------
 ### Description
+The corpus that I have chosen will be a collection of songs used in the Bloons Tower Defense (BTD) videogame series. It is a tower defense strategy game where players strategically deploy towers to prevent balloons from reaching the end of a predetermined path. The game is catered towards all ages. A battles version also exists, where players compete against other players. Songs have been collected from BTD5, BTD6, Bloons Monkey City, and BTD Battles 2, BTD Battles 1 also exists, but uses music from BTD5. The natural comparison groups here are the different games, and how they compare against one another, as they have all been composed by the same composer it offers interesting perspective into how the general game has changed over time, and what changes in music composition are made for different modes of play. The corpus is completely filled, with all songs available on spotify, however the music from earlier games does not exist in spotify, therefore the music for games BTD 1-4 is not available. There are several genres used within the music, which means that it might be difficult to compare songs from a genre that occurs only once in the corpus. Examples of these are "Beyond the Bloondrome" and "Let them eat Lead", as these are metal/rock songs, as well as "Onslaught" and "Primal One", which contain very uptempo music meant for Boss encounters. The most typical songs are the main "theme" songs of the games, as these convey the general tone the composer attempted to set for each game.
+
+
 Overview per Game
 =====================================
 
-Column {.sidebar data-width=500}
+Column {.sidebar data-width=300}
 -------------------------------------
 ### Description
-```{r}
-```
+For this the image Rplot01 can be observed, it contains a detailed plot showing the energy and valence of the songs for each game that will be investigated. It offers interesting insight in showing that there is clearly a very positive tone in all songs. It shows that especially the battles and TD 5 songs contain a lot of high-energy high-valence songs. There is a larger distribution in the songs for bloons monkey city
 
+### Selected Track
+
+```{r}
+  renderUI ({ tryCatch({
+    selected <- full_set %>% filter(abs((valence - input$click$x)*(energy - input$click$y)) == min(abs((valence - input$click$x)*(energy - input$click$y))))
+      trname <- paste("Track Name: ", selected$track.name)
+      trduration <- paste0("Duration:  ", round(selected$track.duration_ms/1000/60),":", str_pad(round((selected$track.duration_ms/1000)%%60),2, pad="0"), " minutes")
+      trtype <- paste("Type: ", selected$track.type)
+      trgame <- paste("Game: ", selected$Game)
+      HTML(paste(trname, trduration, trtype, trgame, sep = '<br/>'))
+   }
+    , error = function(e) renderText("No track selected")
+  )
+})
+```
 
 Column {.tabset}
 -----------------------------------------------------------------------
 
+### All Games
+
+```{r static_plot_5, fig.width=10, fig.height=6}
+awards_5 <-
+  bind_rows(
+    full_set |> mutate(category = "Full Set"),
+  )
+
+plotOutput("awards_5", click = "click")
+output$awards_5 <- renderPlot({
+  ggplot(awards_5,                     # Set up the plot.
+    aes(
+      x = valence,
+      y = energy,
+      size = tempo,
+      colour = Game
+    )
+  ) +
+  geom_point() +              # Scatter plot.
+  geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
+  facet_wrap(~ category) +    # Separate charts per playlist.
+  scale_x_continuous(         # Fine-tune the x axis.
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
+    minor_breaks = NULL       # Remove 'minor' grid-lines.
+  ) +
+  scale_y_continuous(         # Fine-tune the y axis in the same way.
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),
+    minor_breaks = NULL
+  ) +
+  theme_light() + scale_size_continuous(range = c(3, 10)) +             # Use a simpler theme.
+  labs(                       # Make the titles nice.
+    x = "Valence",
+    y = "Energy",
+    size = "Tempo",
+    colour = "Game"
+  ) +
+  theme(
+    legend.text = element_text(size = 14),
+    legend.title = element_text(size = 16)
+  )
+  })
+```
 
 
-### Plot_1 
-You can also embed plots, for example:
 
+### Bloons Monkey City 
 
 ```{r static_plot, fig.width=10, fig.height=6}
 awards <-
@@ -73,16 +146,14 @@ awards <-
     Monkey_city |> mutate(category = "Bloons Monkey City"),
   )
 
-awards |>                    # Start with awards.
-  mutate(
-    mode = ifelse(mode == 0, "Minor", "Major")
-  ) |>
-  ggplot(                     # Set up the plot.
+plotOutput("awards", click = "click")
+output$awards <- renderPlot({
+  ggplot(awards,                     # Set up the plot.
     aes(
       x = valence,
       y = energy,
-      size = loudness,
-      colour = mode
+      size = tempo,
+      colour = loudness
     )
   ) +
   geom_point() +              # Scatter plot.
@@ -98,42 +169,35 @@ awards |>                    # Start with awards.
     breaks = c(0, 0.50, 1),
     minor_breaks = NULL
   ) +
-  scale_colour_brewer(        # Use the Color Brewer to choose a palette.
-    type = "qual",            # Qualitative set.
-    palette = "Paired"        # Name of the palette is 'Paired'.
-  ) +
-  scale_size_continuous(      # Fine-tune the sizes of each point.
-    trans = "exp",            # Use an exp transformation to emphasise loud.
-    guide = "none"            # Remove the legend for size.
-  ) +
-  theme_light() +             # Use a simpler theme.
+  theme_light() + scale_size_continuous(range = c(3, 10)) +             # Use a simpler theme.
   labs(                       # Make the titles nice.
     x = "Valence",
     y = "Energy",
-    colour = "Mode"
+    size = "Tempo",
+    colour = "Loudness"
   )
+  })
 ```
  
-### Plot_2 {.tabset .tabset-dropdown}
-You can also embed plots, for example:
+### Bloons TD Battles 2 {.tabset .tabset-dropdown}
 
 
 ```{r static_plot_2, fig.width=10, fig.height=6}
-awards <-
+awards_2 <-
   bind_rows(
     Battles_2 |> mutate(category = "Bloons TD Battles 2"),
   )
 
-awards |>                    # Start with awards.
-  mutate(
-    mode = ifelse(mode == 0, "Minor", "Major")
-  ) |>
-  ggplot(                     # Set up the plot.
+
+
+plotOutput("awards_2", click = "click")
+output$awards_2 <- renderPlot({
+  ggplot(awards_2,                     # Set up the plot.
     aes(
       x = valence,
       y = energy,
-      size = loudness,
-      colour = mode
+      size = tempo,
+      colour = loudness
     )
   ) +
   geom_point() +              # Scatter plot.
@@ -149,43 +213,34 @@ awards |>                    # Start with awards.
     breaks = c(0, 0.50, 1),
     minor_breaks = NULL
   ) +
-  scale_colour_brewer(        # Use the Color Brewer to choose a palette.
-    type = "qual",            # Qualitative set.
-    palette = "Paired"        # Name of the palette is 'Paired'.
-  ) +
-  scale_size_continuous(      # Fine-tune the sizes of each point.
-    trans = "exp",            # Use an exp transformation to emphasise loud.
-    guide = "none"            # Remove the legend for size.
-  ) +
-  theme_light() +             # Use a simpler theme.
+  theme_light() + scale_size_continuous(range = c(3, 10)) +             # Use a simpler theme.
   labs(                       # Make the titles nice.
     x = "Valence",
     y = "Energy",
-    colour = "Mode"
+    size = "Tempo",
+    colour = "Loudness"
   )
+  })
 ```
 
 
-### Plot_3 {.tabset .tabset-dropdown}
-You can also embed plots, for example:
-
+### Bloons TD 6 {.tabset .tabset-dropdown}
 
 ```{r static_plot_3, fig.width=10, fig.height=6}
-awards <-
+awards_3 <-
   bind_rows(
     TD_6 |> mutate(category = "Bloons TD 6"),
   )
 
-awards |>                    # Start with awards.
-  mutate(
-    mode = ifelse(mode == 0, "Minor", "Major")
-  ) |>
-  ggplot(                     # Set up the plot.
+
+plotOutput("awards_3", click = "click")
+output$awards_3 <- renderPlot({
+  ggplot(awards_3,                     # Set up the plot.
     aes(
       x = valence,
       y = energy,
-      size = loudness,
-      colour = mode
+      size = tempo*2,
+      colour = loudness
     )
   ) +
   geom_point() +              # Scatter plot.
@@ -201,42 +256,33 @@ awards |>                    # Start with awards.
     breaks = c(0, 0.50, 1),
     minor_breaks = NULL
   ) +
-  scale_colour_brewer(        # Use the Color Brewer to choose a palette.
-    type = "qual",            # Qualitative set.
-    palette = "Paired"        # Name of the palette is 'Paired'.
-  ) +
-  scale_size_continuous(      # Fine-tune the sizes of each point.
-    trans = "exp",            # Use an exp transformation to emphasise loud.
-    guide = "none"            # Remove the legend for size.
-  ) +
-  theme_light() +             # Use a simpler theme.
+  theme_light() + scale_size_continuous(range = c(3, 10)) +             # Use a simpler theme.
   labs(                       # Make the titles nice.
     x = "Valence",
     y = "Energy",
-    colour = "Mode"
+    size = "Tempo",
+    colour = "Loudness"
   )
+  })
 ```
 
-### Plot_4 {.tabset .tabset-dropdown}
-You can also embed plots, for example:
+### Bloons TD 5 {.tabset .tabset-dropdown}
 
 
 ```{r static_plot_4, fig.width=10, fig.height=6}
-awards <-
+awards_4 <-
   bind_rows(
-    TD_5 |> mutate(category = "Bloons TD 5")
+    TD_5 |> mutate(category = "Bloons TD 5"),
   )
 
-awards |>                    # Start with awards.
-  mutate(
-    mode = ifelse(mode == 0, "Minor", "Major")
-  ) |>
-  ggplot(                     # Set up the plot.
+plotOutput("awards_4", click = "click")
+output$awards_4 <- renderPlot({
+  ggplot(awards_4,                     # Set up the plot.
     aes(
       x = valence,
       y = energy,
-      size = loudness,
-      colour = mode
+      size = tempo*2,
+      colour = loudness
     )
   ) +
   geom_point() +              # Scatter plot.
@@ -252,21 +298,110 @@ awards |>                    # Start with awards.
     breaks = c(0, 0.50, 1),
     minor_breaks = NULL
   ) +
-  scale_colour_brewer(        # Use the Color Brewer to choose a palette.
-    type = "qual",            # Qualitative set.
-    palette = "Paired"        # Name of the palette is 'Paired'.
-  ) +
-  scale_size_continuous(      # Fine-tune the sizes of each point.
-    trans = "exp",            # Use an exp transformation to emphasise loud.
-    guide = "none"            # Remove the legend for size.
-  ) +
-  theme_light() +             # Use a simpler theme.
+  theme_light() + scale_size_continuous(range = c(3, 10)) +             # Use a simpler theme.
   labs(                       # Make the titles nice.
     x = "Valence",
     y = "Energy",
-    colour = "Mode"
+    size = "Tempo",
+    colour = "Loudness"
   )
+  })
 ```
+
 
 Details
 =====================================
+
+Column {.sidebar data-width=500}
+-------------------------------------
+### Description
+First, it is important to have a look at what can be considered the most important points of the game, the title song. It is the song that players will remember the most, and that they will strongly associate with the game. This section will investigate key components for the title songs of Bloons games. First of all the two main games, Bloons TD 5, and Bloons TD 6. As can be seen in the chromatogram, there is quite a big difference in complexity in the two games. The TD 5 song is quite simple, with a lot of repetition, and a very clear melody. The TD 6 song is much more complex, with a lot of different melodies and harmonies. The TD 6 song also has a lot more variation in the chroma, with a lot of different pitches being used, as well as an increase in tempo. This is interesting, as it shows that the composer has chosen to make the song much more complex, and much more varied. The title song for Bloons TD 5 has a lot of repetition, repeating the marimba melody between 15-30, 35-50 and 100-115 second. The major twist in this track is around 50 seconds, where all instruments are replaced by a flute. The flute stops at 100 seconds, where the old instruments come back. 
+
+The title song for Bloons TD 6 has a lot of variation, with a lot of different melodies and harmonies. The song is much more complex, with a lot of different pitches being used, as well as an increase in tempo. The song is also much longer, with a duration of 4 minutes, compared to the 2 minutes of the TD 5 song. It does follow the same repetition of instruments, with a similar shift at around 100 seconds, where the instruments are replaced by a flute, this continues until 150 seconds, but in contrast to the BTD 5 theme the instruments all slowly join back in, and keep playing. 
+
+
+Column {data-width=1000}
+-------------------------------------
+
+```{r pop-chroma}
+
+bmc_theme <-
+  get_tidy_audio_analysis("4FhRB48acntSlHqjnY77Po") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+btdb_theme <-
+  get_tidy_audio_analysis("73Hvuy9eDRLP719wOOInuv") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+btd6_theme <-
+  get_tidy_audio_analysis("23sMvQBOkqGBtV6CBRWEUf") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+btd5_theme <-
+  get_tidy_audio_analysis("5cygoAvx90lrSM1Derm39d") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+
+```
+
+```{r pop-chroma-plots, fig.width=10.5, fig.height=6.5}
+
+btd5_theme_plot <- 
+  btd5_theme |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  geom_vline(xintercept = 53, colour = "red") +
+  labs(
+    x = "Time (s)", 
+    y = NULL, 
+    fill = "Magnitude", 
+    title = "Title song, Bloons TD 5"
+  ) +
+  theme_minimal() +
+  scale_fill_viridis_c() 
+
+
+btd6_theme_plot <- 
+  btd6_theme |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  geom_vline(xintercept = 184, colour = "red") +
+  labs(
+    x = "Time (s)", 
+    y = NULL, 
+    fill = "Magnitude", 
+    title = "Title song, Bloons TD 6"
+  ) +
+  theme_minimal() +
+  scale_fill_viridis_c() 
+
+plot_grid(btd5_theme_plot, btd6_theme_plot, ncol = 1)
+```
+
+

@@ -1,17 +1,23 @@
 ---
 title: "Compmusrmd"
+runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
     logo: Images/logo.png
+    storyboard: true
 ---
 
 ```{r setup, include=FALSE}
+library(compmus)
+library(shiny)
 library(flexdashboard)
 library(tidyverse)
+library(tidymodels)
 library(spotifyr)
 library(leaflet)
 library(leaflet.extras)
+library(cowplot)
 
 Monkey_city <- get_playlist_audio_features("", "6KwA52G2dp9P7MWkJY3JUA")
 TD_6 <- get_playlist_audio_features("", "2lpTXCxSbaSvTBgVrtbdqt")
@@ -24,38 +30,40 @@ Project Overview
 =====================================
 Column {data-width=300}
 -----------------------------------------------------------------------
-### Bloons TD 5 {height=50%}
+### Bloons TD 5 {data-height=300}
 ```{r picture_2, echo = F, fig.cap = "A classic 'Bloons' game, place monkey towers to defeat the balloons and prevent them from reaching the exit", fig.width=5, fig.height=3}
 knitr::include_graphics("images/btd5.jpg")
 ```
 
-### Bloons Monkey City {height=50%}
+### Bloons Monkey City 
 ```{r picture_1, echo = F, fig.cap = "A strategy game where players slowly upgrade their Monkey base", fig.width=5, fig.height=3}
 knitr::include_graphics("images/bmkcity.jpg")
 ```
 
 Column {data-width=300}
 -----------------------------------------------------------------------
-### Bloons TD 6 {height=50%}
+### Bloons TD 6 
 ```{r picture_3, echo = F, fig.cap = "The newest edition of the classic tower defense mode, it contains many different levels and types of monkeys", fig.width=5, fig.height=3}
 knitr::include_graphics("images/btd6.jpg")
 ```
-### Bloons TD Battles 2 {height=50%}
+### Bloons TD Battles 2 
 ```{r picture_4, echo = F, fig.cap = "A battle mode of bloons tower defense 6, where players compete against each other to see who survives the longest", fig.width=5, fig.height=3}
 knitr::include_graphics("images/btd_battles_2.jpg")
 ```
 
-Column {data-width=400}
------------------------------------------------------------------------
+Column {.sidebar data-width=400}
+-------------------------------------
 ### Description
+The corpus that I have chosen will be a collection of songs used in the Bloons Tower Defense (BTD) videogame series. It is a tower defense strategy game where players strategically deploy towers to prevent balloons from reaching the end of a predetermined path. The game is catered towards all ages. A battles version also exists, where players compete against other players. Songs have been collected from BTD5, BTD6, Bloons Monkey City, and BTD Battles 2, BTD Battles 1 also exists, but uses music from BTD5. The natural comparison groups here are the different games, and how they compare against one another, as they have all been composed by the same composer it offers interesting perspective into how the general game has changed over time, and what changes in music composition are made for different modes of play. The corpus is completely filled, with all songs available on spotify, however the music from earlier games does not exist in spotify, therefore the music for games BTD 1-4 is not available. There are several genres used within the music, which means that it might be difficult to compare songs from a genre that occurs only once in the corpus. Examples of these are "Beyond the Bloondrome" and "Let them eat Lead", as these are metal/rock songs, as well as "Onslaught" and "Primal One", which contain very uptempo music meant for Boss encounters. The most typical songs are the main "theme" songs of the games, as these convey the general tone the composer attempted to set for each game.
+
+
 Overview per Game
 =====================================
 
-Column {.sidebar data-width=500}
+Column {.sidebar data-width=300}
 -------------------------------------
 ### Description
-```{r}
-```
+For this the image Rplot01 can be observed, it contains a detailed plot showing the energy and valence of the songs for each game that will be investigated. It offers interesting insight in showing that there is clearly a very positive tone in all songs. It shows that especially the battles and TD 5 songs contain a lot of high-energy high-valence songs. There is a larger distribution in the songs for bloons monkey city
 
 
 Column {.tabset}
@@ -64,8 +72,6 @@ Column {.tabset}
 
 
 ### Plot_1 
-You can also embed plots, for example:
-
 
 ```{r static_plot, fig.width=10, fig.height=6}
 awards <-
@@ -112,10 +118,14 @@ awards |>                    # Start with awards.
     y = "Energy",
     colour = "Mode"
   )
+
+plotOutput("awards", click = "track.name")
+output$awards <- renderPlot({
+  plot(Monkey_city$track.name ~ Monkey_city$track.name)
+  })
 ```
  
 ### Plot_2 {.tabset .tabset-dropdown}
-You can also embed plots, for example:
 
 
 ```{r static_plot_2, fig.width=10, fig.height=6}
@@ -270,3 +280,86 @@ awards |>                    # Start with awards.
 
 Details
 =====================================
+
+```{r pop-chroma}
+
+bmc_theme <-
+  get_tidy_audio_analysis("4FhRB48acntSlHqjnY77Po") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+btdb_theme <-
+  get_tidy_audio_analysis("73Hvuy9eDRLP719wOOInuv") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+btd6_theme <-
+  get_tidy_audio_analysis("23sMvQBOkqGBtV6CBRWEUf") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+btd5_theme <-
+  get_tidy_audio_analysis("5cygoAvx90lrSM1Derm39d") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+
+```
+
+```{r pop-chroma-plots}
+
+btd5_theme_plot <- 
+  btd5_theme |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  geom_vline(xintercept = 53, colour = "red") +
+  labs(
+    x = "Time (s)", 
+    y = NULL, 
+    fill = "Magnitude", 
+    title = "Title song, Bloons TD 5"
+  ) +
+  theme_minimal() +
+  scale_fill_viridis_c() 
+
+
+btd6_theme_plot <- 
+  btd6_theme |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  geom_vline(xintercept = 184, colour = "red") +
+  labs(
+    x = "Time (s)", 
+    y = NULL, 
+    fill = "Magnitude", 
+    title = "Title song, Bloons TD 6"
+  ) +
+  theme_minimal() +
+  scale_fill_viridis_c() 
+
+plot_grid(btd5_theme_plot, btd6_theme_plot, ncol = 1)
+```
+
+

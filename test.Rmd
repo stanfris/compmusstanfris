@@ -1,0 +1,47 @@
+---
+title: "Untitled"
+runtime: shiny
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(shiny)
+library(tidyverse)
+library(spotifyr)
+library(ggplot2)
+library(dplyr)
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+ecm <- get_playlist_audio_features("", "6KwA52G2dp9P7MWkJY3JUA")
+
+plotOutput("plot1", click = "track.name")
+output$plot1 <- renderPlot({
+  plot(ecm$danceability ~ ecm$energy)
+  })
+
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+  renderUI({
+    a <- input$track.name$x
+    str1 <- paste("You have selected", a)
+    str2 <- paste("You have chosen a range that goes from")
+    HTML(paste(str1, str2, sep = '<br/>'))
+  })
+```
