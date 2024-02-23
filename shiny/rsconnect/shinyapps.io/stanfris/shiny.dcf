@@ -1,0 +1,10 @@
+name: shiny
+title:
+username: stanfris
+account: stanfris
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11313912
+bundleId: 8290598
+url: https://stanfris.shinyapps.io/shiny/
+version: 1
