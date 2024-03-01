@@ -5,6 +5,12 @@ library(dplyr)
 ecm <- get_playlist_audio_features("", "6KwA52G2dp9P7MWkJY3JUA")
 colnames(ecm)
 
+install.packages("stringr")
+
+rmarkdown::render("index.Rmd", output_format = "html_document")
+install.packages(c("shinylive", "httpuv"))
+
+shinylive::export(appdir = "shiny", destdir = "shinyapp")
 
 
 ecm |>

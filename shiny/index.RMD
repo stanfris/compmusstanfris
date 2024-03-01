@@ -4,12 +4,16 @@ runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
-    logo: Images/logo.png
+    logo: logo.png
     storyboard: true
     self_contained: true
     keep_md: true
     standalone: true
 ---
+``` {r setup1}
+  # authenticate the spotify client stuff
+
+```
 
 ```{r setup, include=FALSE}
 library(compmus)
@@ -23,6 +27,10 @@ library(leaflet.extras)
 library(cowplot)
 library(stringr)
 
+Sys.setenv(SPOTIFY_CLIENT_ID = "f1e1c4bdfefe4fb098d0130169f9f15f")
+Sys.setenv(SPOTIFY_CLIENT_SECRET = "6ea02f2018f948a19edd87d54147027e")
+  
+access_token <- get_spotify_access_token()
 
 Monkey_city <- get_playlist_audio_features("", "6KwA52G2dp9P7MWkJY3JUA")
 TD_6 <- get_playlist_audio_features("", "2lpTXCxSbaSvTBgVrtbdqt")
@@ -43,23 +51,23 @@ Column {data-width=300}
 -----------------------------------------------------------------------
 ### Bloons TD 5 {data-height=300}
 ```{r picture_2, echo = F, fig.cap = "A classic 'Bloons' game, place monkey towers to defeat the balloons and prevent them from reaching the exit", fig.width=5, fig.height=3}
-knitr::include_graphics("images/btd5.jpg")
+knitr::include_graphics("www/btd5.jpg")
 ```
 
 ### Bloons Monkey City 
 ```{r picture_1, echo = F, fig.cap = "A strategy game where players slowly upgrade their Monkey base", fig.width=5, fig.height=3}
-knitr::include_graphics("images/bmkcity.jpg")
+knitr::include_graphics("www/bmkcity.jpg")
 ```
 
 Column {data-width=300}
 -----------------------------------------------------------------------
 ### Bloons TD 6 
 ```{r picture_3, echo = F, fig.cap = "The newest edition of the classic tower defense mode, it contains many different levels and types of monkeys", fig.width=5, fig.height=3}
-knitr::include_graphics("images/btd6.jpg")
+knitr::include_graphics("www/btd6.jpg")
 ```
 ### Bloons TD Battles 2 
 ```{r picture_4, echo = F, fig.cap = "A battle mode of bloons tower defense 6, where players compete against each other to see who survives the longest", fig.width=5, fig.height=3}
-knitr::include_graphics("images/btd_battles_2.jpg")
+knitr::include_graphics("www/btd_battles_2.jpg")
 ```
 
 Column {.sidebar data-width=400}
@@ -85,7 +93,9 @@ For this the image Rplot01 can be observed, it contains a detailed plot showing 
       trduration <- paste0("Duration:  ", round(selected$track.duration_ms/1000/60),":", str_pad(round((selected$track.duration_ms/1000)%%60),2, pad="0"), " minutes")
       trtype <- paste("Type: ", selected$track.type)
       trgame <- paste("Game: ", selected$Game)
-      HTML(paste(trname, trduration, trtype, trgame, sep = '<br/>'))
+      uri <- str_split_i(selected$track.uri, ":", 3)
+
+      HTML(paste(trname, trduration, trtype, trgame, uri, str_glue('<iframe src="https://open.spotify.com/embed/track/{uri}", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>'),sep = '<br/>'))
    }
     , error = function(e) renderText("No track selected")
   )

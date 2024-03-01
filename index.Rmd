@@ -36,6 +36,8 @@ Battles_2$Game <- "Bloons TD Battles 2"
 full_set <- rbind(Monkey_city, TD_6, TD_5, Battles_2)
 ```
 
+
+
 Project Overview
 =====================================
 Column {data-width=300}
@@ -75,17 +77,19 @@ Column {.sidebar data-width=300}
 ### Description
 For this the image Rplot01 can be observed, it contains a detailed plot showing the energy and valence of the songs for each game that will be investigated. It offers interesting insight in showing that there is clearly a very positive tone in all songs. It shows that especially the battles and TD 5 songs contain a lot of high-energy high-valence songs. There is a larger distribution in the songs for bloons monkey city
 
-```
-
 Column {.tabset}
 -----------------------------------------------------------------------
 
 ### All Games
 
+
 ```{r static_plot_5, fig.width=10, fig.height=6}
 awards_5 <-
   bind_rows(
-    full_set |> mutate(category = "Full Set"),
+    Monkey_city |> mutate(category = "Bloons Monkey City"),
+    Battles_2 |> mutate(category = "Bloons TD Battles 2"),
+    TD_6 |> mutate(category = "Bloons TD 6"),
+    TD_5 |> mutate(category = "Bloons TD 5")
   )
 
   ggplot(awards_5,                     # Set up the plot.
@@ -109,7 +113,7 @@ awards_5 <-
     breaks = c(0, 0.50, 1),
     minor_breaks = NULL
   ) +
-  theme_light() + scale_size_continuous(range = c(3, 10)) +             # Use a simpler theme.
+  theme_light() + scale_size_continuous(range = c(3, 5)) +             # Use a simpler theme.
   labs(                       # Make the titles nice.
     x = "Valence",
     y = "Energy",
@@ -304,32 +308,134 @@ Column {data-width=1000}
 
 bmc_theme <-
   get_tidy_audio_analysis("4FhRB48acntSlHqjnY77Po") |>
-  select(segments) |>
-  unnest(segments) |>
-  select(start, duration, pitches)
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
 
 btdb_theme <-
   get_tidy_audio_analysis("73Hvuy9eDRLP719wOOInuv") |>
-  select(segments) |>
-  unnest(segments) |>
-  select(start, duration, pitches)
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
 
 btd6_theme <-
   get_tidy_audio_analysis("23sMvQBOkqGBtV6CBRWEUf") |>
-  select(segments) |>
-  unnest(segments) |>
-  select(start, duration, pitches)
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
 
 btd5_theme <-
   get_tidy_audio_analysis("5cygoAvx90lrSM1Derm39d") |>
-  select(segments) |>
-  unnest(segments) |>
-  select(start, duration, pitches)
-
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
 
 ```
 
 ```{r pop-chroma-plots, fig.width=10.5, fig.height=6.5}
+bmc_theme_plot <- 
+  bmc_theme |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  geom_vline(xintercept = 53, colour = "red") +
+  labs(
+    x = "Time (s)", 
+    y = NULL, 
+    fill = "Magnitude", 
+    title = "Title song, Bloons Monkey City"
+  ) +
+  theme_minimal() +
+  scale_fill_viridis_c() 
+
+
+btdb_theme_plot <- 
+  btdb_theme |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  geom_vline(xintercept = 184, colour = "red") +
+  labs(
+    x = "Time (s)", 
+    y = NULL, 
+    fill = "Magnitude", 
+    title = "Title song, Bloons TD battles 2"
+  ) +
+  theme_minimal() +
+  scale_fill_viridis_c() 
+
 
 btd5_theme_plot <- 
   btd5_theme |>
@@ -378,7 +484,112 @@ btd6_theme_plot <-
   theme_minimal() +
   scale_fill_viridis_c() 
 
-plot_grid(btd5_theme_plot, btd6_theme_plot, ncol = 1)
+plot_grid(bmc_theme_plot, btdb_theme_plot, btd5_theme_plot, btd6_theme_plot, ncol = 1)
 ```
 
+Self similarity
+=====================================
+column {.sidebar data-width=300}
+-------------------------------------
+### Description
+
+In this section we can see the self similarity matrices of the songs that 
+
+column {width=1000}
+-------------------------------------
+``` {r self-similarity, fig.width=7, fig.height=7}
+bmc_theme_sim <-
+bmc_theme |>
+  compmus_self_similarity(timbre, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(
+    x = "Time (s)", 
+    y = "Time (s)", 
+    fill = "Magnitude", 
+    title = "Title song, Bloons Monkey City"
+  )
+
+btdb_theme_sim <-
+btdb_theme |>
+  compmus_self_similarity(timbre, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+    labs(
+    x = "Time (s)", 
+    y = "Time (s)", 
+    fill = "Magnitude", 
+    title = "Title song, Bloons TD battles 2"
+  )
+
+btd5_theme_sim <-
+btd5_theme |>
+  compmus_self_similarity(timbre, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(
+    x = "Time (s)", 
+    y = "Time (s)", 
+    fill = "Magnitude", 
+    title = "Title song, Bloons TD 5"
+  )
+
+btd6_theme_sim <-
+btd6_theme |>
+  compmus_self_similarity(timbre, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(
+    x = "Time (s)", 
+    y = "Time (s)", 
+    fill = "Magnitude", 
+    title = "Title song, Bloons TD 6"
+  )
+
+plot_grid(bmc_theme_sim, btdb_theme_sim, btd5_theme_sim, btd6_theme_sim, ncol = 2)
+```
 
