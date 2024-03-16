@@ -23,10 +23,10 @@ library(cowplot)
 library(stringr)
 
 
-Monkey_city <- get_playlist_audio_features("", "6KwA52G2dp9P7MWkJY3JUA")
-TD_6 <- get_playlist_audio_features("", "2lpTXCxSbaSvTBgVrtbdqt")
-TD_5 <- get_playlist_audio_features("", "6f9bDISBNqZQ9HVP3TIqUB")
-Battles_2 <- get_playlist_audio_features("", "0AUei7z6FpCCUCsj9QhTCv")
+Monkey_city <- readRDS("data/Monkey_city-data.RDS")
+TD_6 <- readRDS("data/TD_6-data.RDS")
+TD_5 <- readRDS("data/TD_5-data.RDS")
+Battles_2 <- readRDS("data/Battles_2-data.RDS")
 
 Monkey_city$Game <- "Bloons Monkey City"
 TD_6$Game <- "Bloons TD 6"
@@ -75,7 +75,14 @@ Overview per Game
 Column {.sidebar data-width=300}
 -------------------------------------
 ### Description
-For this the image Rplot01 can be observed, it contains a detailed plot showing the energy and valence of the songs for each game that will be investigated. It offers interesting insight in showing that there is clearly a very positive tone in all songs. It shows that especially the battles and TD 5 songs contain a lot of high-energy high-valence songs. There is a larger distribution in the songs for bloons monkey city
+For this the image plots can be observed for all games, showing how all of , it contains a detailed plot showing the energy and valence of the songs for each game that will be investigated. It offers interesting insight in showing that there is clearly a very positive tone in all songs. It shows that especially the battles and TD 5 songs contain a lot of high-energy high-valence songs. There is a larger distribution in the songs for bloons monkey city
+
+``` {r} 
+ HTML('<iframe src="https://open.spotify.com/embed/playlist/2lpTXCxSbaSvTBgVrtbdqt", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+ HTML('<iframe src="https://open.spotify.com/embed/playlist/6KwA52G2dp9P7MWkJY3JUA", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+  HTML('<iframe src="https://open.spotify.com/embed/playlist/0AUei7z6FpCCUCsj9QhTCv", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+   HTML('<iframe src="https://open.spotify.com/embed/playlist/6f9bDISBNqZQ9HVP3TIqUB", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+```
 
 Column {.tabset}
 -----------------------------------------------------------------------
@@ -84,46 +91,8 @@ Column {.tabset}
 
 
 ```{r static_plot_5, fig.width=10, fig.height=6}
-awards_5 <-
-  bind_rows(
-    Monkey_city |> mutate(category = "Bloons Monkey City"),
-    Battles_2 |> mutate(category = "Bloons TD Battles 2"),
-    TD_6 |> mutate(category = "Bloons TD 6"),
-    TD_5 |> mutate(category = "Bloons TD 5")
-  )
-
-  ggplot(awards_5,                     # Set up the plot.
-    aes(
-      x = valence,
-      y = energy,
-      size = tempo,
-      colour = Game
-    )
-  ) +
-  geom_point() +              # Scatter plot.
-  geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
-  facet_wrap(~ category) +    # Separate charts per playlist.
-  scale_x_continuous(         # Fine-tune the x axis.
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
-    minor_breaks = NULL       # Remove 'minor' grid-lines.
-  ) +
-  scale_y_continuous(         # Fine-tune the y axis in the same way.
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),
-    minor_breaks = NULL
-  ) +
-  theme_light() + scale_size_continuous(range = c(3, 5)) +             # Use a simpler theme.
-  labs(                       # Make the titles nice.
-    x = "Valence",
-    y = "Energy",
-    size = "Tempo",
-    colour = "Game"
-  ) +
-  theme(
-    legend.text = element_text(size = 14),
-    legend.title = element_text(size = 16)
-  )
+awards_5 <- readRDS("data/awards_5-data.RDS")
+plot_grid(awards_5, ncol = 1)
 ```
 
 
@@ -131,163 +100,32 @@ awards_5 <-
 ### Bloons Monkey City 
 
 ```{r static_plot, fig.width=10, fig.height=6}
-awards <-
-  bind_rows(
-    Monkey_city |> mutate(category = "Bloons Monkey City"),
-  )
-
-  ggplot(awards,                     # Set up the plot.
-    aes(
-      x = valence,
-      y = energy,
-      size = tempo,
-      colour = loudness
-    )
-  ) +
-  geom_point() +              # Scatter plot.
-  geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
-  facet_wrap(~ category) +    # Separate charts per playlist.
-  scale_x_continuous(         # Fine-tune the x axis.
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
-    minor_breaks = NULL       # Remove 'minor' grid-lines.
-  ) +
-  scale_y_continuous(         # Fine-tune the y axis in the same way.
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),
-    minor_breaks = NULL
-  ) +
-  theme_light() + scale_size_continuous(range = c(3, 10)) +             # Use a simpler theme.
-  labs(                       # Make the titles nice.
-    x = "Valence",
-    y = "Energy",
-    size = "Tempo",
-    colour = "Loudness"
-  )
+awards <- readRDS("data/awards-data.RDS")
+plot_grid(awards, ncol = 1)
 ```
- 
+
 ### Bloons TD Battles 2 {.tabset .tabset-dropdown}
 
-
 ```{r static_plot_2, fig.width=10, fig.height=6}
-awards_2 <-
-  bind_rows(
-    Battles_2 |> mutate(category = "Bloons TD Battles 2"),
-  )
-
-
-
-  ggplot(awards_2,                     # Set up the plot.
-    aes(
-      x = valence,
-      y = energy,
-      size = tempo,
-      colour = loudness
-    )
-  ) +
-  geom_point() +              # Scatter plot.
-  geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
-  facet_wrap(~ category) +    # Separate charts per playlist.
-  scale_x_continuous(         # Fine-tune the x axis.
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
-    minor_breaks = NULL       # Remove 'minor' grid-lines.
-  ) +
-  scale_y_continuous(         # Fine-tune the y axis in the same way.
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),
-    minor_breaks = NULL
-  ) +
-  theme_light() + scale_size_continuous(range = c(3, 10)) +             # Use a simpler theme.
-  labs(                       # Make the titles nice.
-    x = "Valence",
-    y = "Energy",
-    size = "Tempo",
-    colour = "Loudness"
-  )
-
+awards_2 <- readRDS("data/awards_2-data.RDS")
+plot_grid(awards_2, ncol = 1)
 ```
 
 
 ### Bloons TD 6 {.tabset .tabset-dropdown}
 
 ```{r static_plot_3, fig.width=10, fig.height=6}
-awards_3 <-
-  bind_rows(
-    TD_6 |> mutate(category = "Bloons TD 6"),
-  )
-
-
-  ggplot(awards_3,                     # Set up the plot.
-    aes(
-      x = valence,
-      y = energy,
-      size = tempo*2,
-      colour = loudness
-    )
-  ) +
-  geom_point() +              # Scatter plot.
-  geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
-  facet_wrap(~ category) +    # Separate charts per playlist.
-  scale_x_continuous(         # Fine-tune the x axis.
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
-    minor_breaks = NULL       # Remove 'minor' grid-lines.
-  ) +
-  scale_y_continuous(         # Fine-tune the y axis in the same way.
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),
-    minor_breaks = NULL
-  ) +
-  theme_light() + scale_size_continuous(range = c(3, 10)) +             # Use a simpler theme.
-  labs(                       # Make the titles nice.
-    x = "Valence",
-    y = "Energy",
-    size = "Tempo",
-    colour = "Loudness"
-  )
-
+awards_3 <- readRDS("data/awards_3-data.RDS")
+plot_grid(awards_3, ncol = 1)
 ```
 
 ### Bloons TD 5 {.tabset .tabset-dropdown}
 
-
 ```{r static_plot_4, fig.width=10, fig.height=6}
-awards_4 <-
-  bind_rows(
-    TD_5 |> mutate(category = "Bloons TD 5"),
-  )
-
-  ggplot(awards_4,                     # Set up the plot.
-    aes(
-      x = valence,
-      y = energy,
-      size = tempo*2,
-      colour = loudness
-    )
-  ) +
-  geom_point() +              # Scatter plot.
-  geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
-  facet_wrap(~ category) +    # Separate charts per playlist.
-  scale_x_continuous(         # Fine-tune the x axis.
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
-    minor_breaks = NULL       # Remove 'minor' grid-lines.
-  ) +
-  scale_y_continuous(         # Fine-tune the y axis in the same way.
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),
-    minor_breaks = NULL
-  ) +
-  theme_light() + scale_size_continuous(range = c(3, 10)) +             # Use a simpler theme.
-  labs(                       # Make the titles nice.
-    x = "Valence",
-    y = "Energy",
-    size = "Tempo",
-    colour = "Loudness"
-  )
-
+awards_4 <- readRDS("data/awards_4-data.RDS")
+plot_grid(awards_4, ncol = 1)
 ```
+
 
 
 Details
@@ -300,296 +138,342 @@ First, it is important to have a look at what can be considered the most importa
 
 The title song for Bloons TD 6 has a lot of variation, with a lot of different melodies and harmonies. The song is much more complex, with a lot of different pitches being used, as well as an increase in tempo. The song is also much longer, with a duration of 4 minutes, compared to the 2 minutes of the TD 5 song. It does follow the same repetition of instruments, with a similar shift at around 100 seconds, where the instruments are replaced by a flute, this continues until 150 seconds, but in contrast to the BTD 5 theme the instruments all slowly join back in, and keep playing. 
 
+``` {r} 
+ HTML('<iframe src="https://open.spotify.com/embed/track/23sMvQBOkqGBtV6CBRWEUf", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+ HTML('<iframe src="https://open.spotify.com/embed/track/4FhRB48acntSlHqjnY77Po", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+  HTML('<iframe src="https://open.spotify.com/embed/track/73Hvuy9eDRLP719wOOInuv", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+   HTML('<iframe src="https://open.spotify.com/embed/track/5cygoAvx90lrSM1Derm39d", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+```
 
 Column {data-width=1000}
 -------------------------------------
 
 ```{r pop-chroma}
-
-bmc_theme <-
-  get_tidy_audio_analysis("4FhRB48acntSlHqjnY77Po") |>
-  compmus_align(bars, segments) |>                     # Change `bars`
-  select(bars) |>                                      #   in all three
-  unnest(bars) |>                                      #   of these lines.
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  ) |>
-  mutate(
-    timbre =
-      map(segments,
-        compmus_summarise, timbre,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  )
-
-btdb_theme <-
-  get_tidy_audio_analysis("73Hvuy9eDRLP719wOOInuv") |>
-  compmus_align(bars, segments) |>                     # Change `bars`
-  select(bars) |>                                      #   in all three
-  unnest(bars) |>                                      #   of these lines.
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  ) |>
-  mutate(
-    timbre =
-      map(segments,
-        compmus_summarise, timbre,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  )
-
-btd6_theme <-
-  get_tidy_audio_analysis("23sMvQBOkqGBtV6CBRWEUf") |>
-  compmus_align(bars, segments) |>                     # Change `bars`
-  select(bars) |>                                      #   in all three
-  unnest(bars) |>                                      #   of these lines.
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  ) |>
-  mutate(
-    timbre =
-      map(segments,
-        compmus_summarise, timbre,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  )
-
-btd5_theme <-
-  get_tidy_audio_analysis("5cygoAvx90lrSM1Derm39d") |>
-  compmus_align(bars, segments) |>                     # Change `bars`
-  select(bars) |>                                      #   in all three
-  unnest(bars) |>                                      #   of these lines.
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  ) |>
-  mutate(
-    timbre =
-      map(segments,
-        compmus_summarise, timbre,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  )
+bmc_theme <- readRDS("data/bmc_theme-data.RDS")
+btdb_theme <- readRDS("data/btdb_theme-data.RDS")
+btd5_theme <- readRDS("data/btd5_theme-data.RDS")
+btd6_theme <- readRDS("data/btd6_theme-data.RDS")
 
 ```
 
 ```{r pop-chroma-plots, fig.width=10.5, fig.height=6.5}
-bmc_theme_plot <- 
-  bmc_theme |>
-  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
-  compmus_gather_chroma() |> 
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = pitch_class,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  geom_vline(xintercept = 53, colour = "red") +
-  labs(
-    x = "Time (s)", 
-    y = NULL, 
-    fill = "Magnitude", 
-    title = "Title song, Bloons Monkey City"
-  ) +
-  theme_minimal() +
-  scale_fill_viridis_c() 
-
-
-btdb_theme_plot <- 
-  btdb_theme |>
-  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
-  compmus_gather_chroma() |> 
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = pitch_class,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  geom_vline(xintercept = 184, colour = "red") +
-  labs(
-    x = "Time (s)", 
-    y = NULL, 
-    fill = "Magnitude", 
-    title = "Title song, Bloons TD battles 2"
-  ) +
-  theme_minimal() +
-  scale_fill_viridis_c() 
-
-
-btd5_theme_plot <- 
-  btd5_theme |>
-  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
-  compmus_gather_chroma() |> 
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = pitch_class,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  geom_vline(xintercept = 53, colour = "red") +
-  labs(
-    x = "Time (s)", 
-    y = NULL, 
-    fill = "Magnitude", 
-    title = "Title song, Bloons TD 5"
-  ) +
-  theme_minimal() +
-  scale_fill_viridis_c() 
-
-
-btd6_theme_plot <- 
-  btd6_theme |>
-  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
-  compmus_gather_chroma() |> 
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = pitch_class,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  geom_vline(xintercept = 184, colour = "red") +
-  labs(
-    x = "Time (s)", 
-    y = NULL, 
-    fill = "Magnitude", 
-    title = "Title song, Bloons TD 6"
-  ) +
-  theme_minimal() +
-  scale_fill_viridis_c() 
+bmc_theme_plot <- readRDS("data/bmc_theme_plot-data.RDS")
+btdb_theme_plot <- readRDS("data/btdb_theme_plot-data.RDS")
+btd5_theme_plot <- readRDS("data/btd5_theme_plot-data.RDS")
+btd6_theme_plot <- readRDS("data/btd6_theme_plot-data.RDS")
 
 plot_grid(bmc_theme_plot, btdb_theme_plot, btd5_theme_plot, btd6_theme_plot, ncol = 1)
 ```
 
-Self similarity
+<!-- Self similarity -->
+<!-- ===================================== -->
+<!-- column {.sidebar data-width=300} -->
+<!-- ------------------------------------- -->
+<!-- ### Description -->
+
+<!-- In this section we can see the self similarity matrices of the songs that  -->
+
+<!-- column {width=1000 .tabset} -->
+<!-- ------------------------------------- -->
+<!-- ### Timbre Comparison -->
+<!-- ``` {r self-similarity, fig.width=7, fig.height=7} -->
+<!-- bmc_theme_sim <- -->
+<!-- bmc_theme |> -->
+<!--   compmus_self_similarity(timbre, "cosine") |>  -->
+<!--   ggplot( -->
+<!--     aes( -->
+<!--       x = xstart + xduration / 2, -->
+<!--       width = xduration, -->
+<!--       y = ystart + yduration / 2, -->
+<!--       height = yduration, -->
+<!--       fill = d -->
+<!--     ) -->
+<!--   ) + -->
+<!--   geom_tile() + -->
+<!--   coord_fixed() + -->
+<!--   scale_fill_viridis_c(guide = "none") + -->
+<!--   theme_classic() + -->
+<!--   labs( -->
+<!--     x = "Time (s)",  -->
+<!--     y = "Time (s)",  -->
+<!--     fill = "Magnitude",  -->
+<!--     title = "Title song, Bloons Monkey City" -->
+<!--   ) -->
+
+
+<!-- btdb_theme_sim <- -->
+<!-- btdb_theme |> -->
+<!--   compmus_self_similarity(timbre, "cosine") |>  -->
+<!--   ggplot( -->
+<!--     aes( -->
+<!--       x = xstart + xduration / 2, -->
+<!--       width = xduration, -->
+<!--       y = ystart + yduration / 2, -->
+<!--       height = yduration, -->
+<!--       fill = d -->
+<!--     ) -->
+<!--   ) + -->
+<!--   geom_tile() + -->
+<!--   coord_fixed() + -->
+<!--   scale_fill_viridis_c(guide = "none") + -->
+<!--   theme_classic() + -->
+<!--     labs( -->
+<!--     x = "Time (s)",  -->
+<!--     y = "Time (s)",  -->
+<!--     fill = "Magnitude",  -->
+<!--     title = "Title song, Bloons TD battles 2" -->
+<!--   ) -->
+
+<!-- btd5_theme_sim <- -->
+<!-- btd5_theme |> -->
+<!--   compmus_self_similarity(timbre, "cosine") |>  -->
+<!--   ggplot( -->
+<!--     aes( -->
+<!--       x = xstart + xduration / 2, -->
+<!--       width = xduration, -->
+<!--       y = ystart + yduration / 2, -->
+<!--       height = yduration, -->
+<!--       fill = d -->
+<!--     ) -->
+<!--   ) + -->
+<!--   geom_tile() + -->
+<!--   coord_fixed() + -->
+<!--   scale_fill_viridis_c(guide = "none") + -->
+<!--   theme_classic() + -->
+<!--   labs( -->
+<!--     x = "Time (s)",  -->
+<!--     y = "Time (s)",  -->
+<!--     fill = "Magnitude",  -->
+<!--     title = "Title song, Bloons TD 5" -->
+<!--   ) -->
+
+<!-- btd6_theme_sim <- -->
+<!-- btd6_theme |> -->
+<!--   compmus_self_similarity(timbre, "cosine") |>  -->
+<!--   ggplot( -->
+<!--     aes( -->
+<!--       x = xstart + xduration / 2, -->
+<!--       width = xduration, -->
+<!--       y = ystart + yduration / 2, -->
+<!--       height = yduration, -->
+<!--       fill = d -->
+<!--     ) -->
+<!--   ) + -->
+<!--   geom_tile() + -->
+<!--   coord_fixed() + -->
+<!--   scale_fill_viridis_c(guide = "none") + -->
+<!--   theme_classic() + -->
+<!--   labs( -->
+<!--     x = "Time (s)",  -->
+<!--     y = "Time (s)",  -->
+<!--     fill = "Magnitude",  -->
+<!--     title = "Title song, Bloons TD 6" -->
+<!--   ) -->
+
+<!-- plot_grid(bmc_theme_sim, btdb_theme_sim, btd5_theme_sim, btd6_theme_sim, ncol = 2) -->
+<!-- ``` -->
+
+New 
 =====================================
+
 column {.sidebar data-width=300}
 -------------------------------------
 ### Description
+In this section more details on each song are shown 
 
-In this section we can see the self similarity matrices of the songs that 
-
-column {width=1000}
--------------------------------------
-``` {r self-similarity, fig.width=7, fig.height=7}
-bmc_theme_sim <-
-bmc_theme |>
-  compmus_self_similarity(timbre, "cosine") |> 
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(
-    x = "Time (s)", 
-    y = "Time (s)", 
-    fill = "Magnitude", 
-    title = "Title song, Bloons Monkey City"
-  )
-
-btdb_theme_sim <-
-btdb_theme |>
-  compmus_self_similarity(timbre, "cosine") |> 
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-    labs(
-    x = "Time (s)", 
-    y = "Time (s)", 
-    fill = "Magnitude", 
-    title = "Title song, Bloons TD battles 2"
-  )
-
-btd5_theme_sim <-
-btd5_theme |>
-  compmus_self_similarity(timbre, "cosine") |> 
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(
-    x = "Time (s)", 
-    y = "Time (s)", 
-    fill = "Magnitude", 
-    title = "Title song, Bloons TD 5"
-  )
-
-btd6_theme_sim <-
-btd6_theme |>
-  compmus_self_similarity(timbre, "cosine") |> 
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(
-    x = "Time (s)", 
-    y = "Time (s)", 
-    fill = "Magnitude", 
-    title = "Title song, Bloons TD 6"
-  )
-
-plot_grid(bmc_theme_sim, btdb_theme_sim, btd5_theme_sim, btd6_theme_sim, ncol = 2)
+``` {r} 
+ HTML('<iframe src="https://open.spotify.com/embed/track/23sMvQBOkqGBtV6CBRWEUf", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+ HTML('<iframe src="https://open.spotify.com/embed/track/4FhRB48acntSlHqjnY77Po", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+  HTML('<iframe src="https://open.spotify.com/embed/track/73Hvuy9eDRLP719wOOInuv", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+   HTML('<iframe src="https://open.spotify.com/embed/track/5cygoAvx90lrSM1Derm39d", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
 ```
 
+column {width=1000 .tabset}
+-------------------------------------
+
+### Chroma and Timbre Self-Similarity
+``` {r self-similarity_chroma_bmc, fig.width=12.5, fig.height=7}
+bmc_theme_side_by_side <- readRDS("data/bmc_theme_side_by_side-data.RDS")
+btdb_theme_side_by_side <- readRDS("data/btdb_theme_side_by_side-data.RDS")
+btd5_theme_side_by_side <- readRDS("data/btd5_theme_side_by_side-data.RDS")
+btd6_theme_side_by_side <- readRDS("data/btd6_theme_side_by_side-data.RDS")
+
+plot_grid(bmc_theme_side_by_side, btdb_theme_side_by_side,btd5_theme_side_by_side, btd6_theme_side_by_side, ncol = 2)
+```
+
+### Chord Analysis {.tabset .tabset-dropdown}
+
+```{r ECHO=FALSE}
+circshift <- function(v, n) {
+  if (n == 0) v else c(tail(v, n), head(v, -n))
+}
+
+#      C     C#    D     Eb    E     F     F#    G     Ab    A     Bb    B
+major_chord <-
+  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    0,    0)
+minor_chord <-
+  c(   1,    0,    0,    1,    0,    0,    0,    1,    0,    0,    0,    0)
+seventh_chord <-
+  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    1,    0)
+
+chord_templates <-
+  tribble(
+    ~name, ~template,
+    "Gb:7", circshift(seventh_chord, 6),
+    "Gb:maj", circshift(major_chord, 6),
+    "Bb:min", circshift(minor_chord, 10),
+    "Db:maj", circshift(major_chord, 1),
+    "F:min", circshift(minor_chord, 5),
+    "Ab:7", circshift(seventh_chord, 8),
+    "Ab:maj", circshift(major_chord, 8),
+    "C:min", circshift(minor_chord, 0),
+    "Eb:7", circshift(seventh_chord, 3),
+    "Eb:maj", circshift(major_chord, 3),
+    "G:min", circshift(minor_chord, 7),
+    "Bb:7", circshift(seventh_chord, 10),
+    "Bb:maj", circshift(major_chord, 10),
+    "D:min", circshift(minor_chord, 2),
+    "F:7", circshift(seventh_chord, 5),
+    "F:maj", circshift(major_chord, 5),
+    "A:min", circshift(minor_chord, 9),
+    "C:7", circshift(seventh_chord, 0),
+    "C:maj", circshift(major_chord, 0),
+    "E:min", circshift(minor_chord, 4),
+    "G:7", circshift(seventh_chord, 7),
+    "G:maj", circshift(major_chord, 7),
+    "B:min", circshift(minor_chord, 11),
+    "D:7", circshift(seventh_chord, 2),
+    "D:maj", circshift(major_chord, 2),
+    "F#:min", circshift(minor_chord, 6),
+    "A:7", circshift(seventh_chord, 9),
+    "A:maj", circshift(major_chord, 9),
+    "C#:min", circshift(minor_chord, 1),
+    "E:7", circshift(seventh_chord, 4),
+    "E:maj", circshift(major_chord, 4),
+    "G#:min", circshift(minor_chord, 8),
+    "B:7", circshift(seventh_chord, 11),
+    "B:maj", circshift(major_chord, 11),
+    "D#:min", circshift(minor_chord, 3)
+  )
+```
+
+```{r, echo = FALSE}
+bmc_theme_chord_analysis <- readRDS("data/bmc_theme_chord_analysis-data.RDS")
+btdb_theme_chord_analysis <- readRDS("data/btdb_theme_chord_analysis-data.RDS")
+btd5_theme_chord_analysis <- readRDS("data/btd5_theme_chord_analysis-data.RDS")
+btd6_theme_chord_analysis <- readRDS("data/btd6_theme_chord_analysis-data.RDS")
+
+plot_grid(bmc_theme_chord_analysis, btdb_theme_chord_analysis,btd5_theme_chord_analysis, btd6_theme_chord_analysis, ncol = 2)
+```
+
+
+### Chordogram {.tabset .tabset-dropdown}
+```{r, echo = FALSE}
+circshift <- function(v, n) {
+  if (n == 0) v else c(tail(v, n), head(v, -n))
+}
+
+#      C     C#    D     Eb    E     F     F#    G     Ab    A     Bb    B
+major_chord <-
+  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    0,    0)
+minor_chord <-
+  c(   1,    0,    0,    1,    0,    0,    0,    1,    0,    0,    0,    0)
+seventh_chord <-
+  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    1,    0)
+
+major_key <-
+  c(6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88)
+minor_key <-
+  c(6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17)
+
+chord_templates <-
+  tribble(
+    ~name, ~template,
+    "Gb:7", circshift(seventh_chord, 6),
+    "Gb:maj", circshift(major_chord, 6),
+    "Bb:min", circshift(minor_chord, 10),
+    "Db:maj", circshift(major_chord, 1),
+    "F:min", circshift(minor_chord, 5),
+    "Ab:7", circshift(seventh_chord, 8),
+    "Ab:maj", circshift(major_chord, 8),
+    "C:min", circshift(minor_chord, 0),
+    "Eb:7", circshift(seventh_chord, 3),
+    "Eb:maj", circshift(major_chord, 3),
+    "G:min", circshift(minor_chord, 7),
+    "Bb:7", circshift(seventh_chord, 10),
+    "Bb:maj", circshift(major_chord, 10),
+    "D:min", circshift(minor_chord, 2),
+    "F:7", circshift(seventh_chord, 5),
+    "F:maj", circshift(major_chord, 5),
+    "A:min", circshift(minor_chord, 9),
+    "C:7", circshift(seventh_chord, 0),
+    "C:maj", circshift(major_chord, 0),
+    "E:min", circshift(minor_chord, 4),
+    "G:7", circshift(seventh_chord, 7),
+    "G:maj", circshift(major_chord, 7),
+    "B:min", circshift(minor_chord, 11),
+    "D:7", circshift(seventh_chord, 2),
+    "D:maj", circshift(major_chord, 2),
+    "F#:min", circshift(minor_chord, 6),
+    "A:7", circshift(seventh_chord, 9),
+    "A:maj", circshift(major_chord, 9),
+    "C#:min", circshift(minor_chord, 1),
+    "E:7", circshift(seventh_chord, 4),
+    "E:maj", circshift(major_chord, 4),
+    "G#:min", circshift(minor_chord, 8),
+    "B:7", circshift(seventh_chord, 11),
+    "B:maj", circshift(major_chord, 11),
+    "D#:min", circshift(minor_chord, 3)
+  )
+
+key_templates <-
+  tribble(
+    ~name, ~template,
+    "Gb:maj", circshift(major_key, 6),
+    "Bb:min", circshift(minor_key, 10),
+    "Db:maj", circshift(major_key, 1),
+    "F:min", circshift(minor_key, 5),
+    "Ab:maj", circshift(major_key, 8),
+    "C:min", circshift(minor_key, 0),
+    "Eb:maj", circshift(major_key, 3),
+    "G:min", circshift(minor_key, 7),
+    "Bb:maj", circshift(major_key, 10),
+    "D:min", circshift(minor_key, 2),
+    "F:maj", circshift(major_key, 5),
+    "A:min", circshift(minor_key, 9),
+    "C:maj", circshift(major_key, 0),
+    "E:min", circshift(minor_key, 4),
+    "G:maj", circshift(major_key, 7),
+    "B:min", circshift(minor_key, 11),
+    "D:maj", circshift(major_key, 2),
+    "F#:min", circshift(minor_key, 6),
+    "A:maj", circshift(major_key, 9),
+    "C#:min", circshift(minor_key, 1),
+    "E:maj", circshift(major_key, 4),
+    "G#:min", circshift(minor_key, 8),
+    "B:maj", circshift(major_key, 11),
+    "D#:min", circshift(minor_key, 3)
+  )
+
+```
+
+```{r, echo = FALSE}
+bmc_theme_chordogram <- readRDS("data/bmc_theme_chordogram-data.RDS")
+btdb_theme_chordogram <- readRDS("data/btdb_theme_chordogram-data.RDS")
+btd5_theme_chordogram <- readRDS("data/btd5_theme_chordogram-data.RDS")
+btd6_theme_chordogram <- readRDS("data/btd6_theme_chordogram-data.RDS")
+
+plot_grid(bmc_theme_chordogram, btdb_theme_chordogram,btd5_theme_chordogram, btd6_theme_chordogram, ncol = 2)
+```
+
+### Tempograms {.tabset .tabset-dropdown}
+```{r, echo = FALSE}
+
+bmc_tempogram <- readRDS("data/bmc_theme_tempogram-data.RDS")
+btdb_tempogram <- readRDS("data/btdb_theme_tempogram-data.RDS")
+btd5_tempogram <- readRDS("data/btd5_theme_tempogram-data.RDS")
+btd6_tempogram <- readRDS("data/btd6_theme_tempogram-data.RDS")
+
+plot_grid(bmc_tempogram, btdb_tempogram,btd5_tempogram, btd6_tempogram, ncol = 2)
+
+```
