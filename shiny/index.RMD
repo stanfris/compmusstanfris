@@ -26,9 +26,6 @@ library(leaflet)
 library(leaflet.extras)
 library(cowplot)
 library(stringr)
-
-Sys.setenv(SPOTIFY_CLIENT_ID = "f1e1c4bdfefe4fb098d0130169f9f15f")
-Sys.setenv(SPOTIFY_CLIENT_SECRET = "6ea02f2018f948a19edd87d54147027e")
   
 access_token <- get_spotify_access_token()
 
@@ -417,5 +414,6 @@ btd6_theme_plot <-
 
 plot_grid(btd5_theme_plot, btd6_theme_plot, ncol = 1)
 ```
+
 
 
