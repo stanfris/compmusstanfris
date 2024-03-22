@@ -380,7 +380,7 @@ Classification Analysis For Bloons TD Battles
 column {.sidebar data-width=300}
 ---------------------------------------------------------------------
 ### Description
-  As discussed at the start, Bloons TD Battles 2 has a few songs that jump into different genres. This section will investigate the classification of the songs, and see if it is able to distinguish different genres.
+  As discussed at the start, Bloons Monkey City has quite a few songs that are in different areas when it comes to valence and energy This section will investigate the classification of the songs, and see if it is able to distinguish different types.
 
 
 Column {data-width=1000}
@@ -405,9 +405,8 @@ get_pr <- function(fit) {
     select(class = Prediction, precision, recall)
 }  
 
-
 halloween <-
-  Battles_2 %>% distinct(track.name, .keep_all = TRUE) |>
+  TD_6 |>
   add_audio_analysis() |>
   mutate(
     segments = map2(segments, key, compmus_c_transpose),
