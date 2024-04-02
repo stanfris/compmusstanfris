@@ -120,6 +120,8 @@ Monkey_city$Game <- "Bloons Monkey City"
 TD_6$Game <- "Bloons TD 6"
 TD_5$Game <- "Bloons TD 5"
 Battles_2$Game <- "Bloons TD Battles 2"
+KR$Game <- "Kingdom Rush Frontiers"
+PVZ$Game <- "Plants vs Zombies"
 
 
 awards_5 <-
@@ -946,8 +948,8 @@ saveRDS(object = halloween_dist_3_plot,file = "data/halloween_dist_3-data.RDS")
 
 Tempogram_new_Games <-
   ggplot(bind_rows(
-    KR |> mutate(category = "Bloons Monkey City"),
-    PVZ |> mutate(category = "Bloons TD Battles 2"),
+    KR |> mutate(category = "Kingdom Rush Frontiers"),
+    PVZ |> mutate(category = "Plants"),
     TD_6 |> mutate(category = "Bloons TD 6"),
     TD_5 |> mutate(category = "Bloons TD 5")
   ),                     # Set up the plot.
@@ -969,5 +971,7 @@ Tempogram_new_Games <-
     legend.title = element_text(size = 16)
   )
 
-plot_grid(awards_5)
+saveRDS(object = Tempogram_new_Games,file = "data/Tempogram_new_Games-data.RDS")
+
+
 

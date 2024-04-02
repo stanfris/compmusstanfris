@@ -1,5 +1,5 @@
 ---
-title: "Compmusrmd"
+title: "Bloons Beats"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -94,7 +94,8 @@ For this the image plots can be observed for all games, showing how all of , it 
    HTML('<iframe src="https://open.spotify.com/embed/playlist/6f9bDISBNqZQ9HVP3TIqUB", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
 ```
 
-Column {.tabset}
+
+column {data-width=1000}
 -----------------------------------------------------------------------
 
 ### All Games
@@ -400,7 +401,8 @@ Classification Analysis for battles 2
 column {.sidebar data-width=300}
 ---------------------------------------------------------------------
 ### Description
-As mentioned at the start, the game Bloons TD battles 2 contains quite a lot of different genres, as well as a lot of different songs. This makes it an interesting game to do a classification analysis on, as we can test if these songs are not grouped with the others. The songs that are expected to be classified as outliers together are Beyond the Bloondrome and Let them eat Lead as these are metal/rock songs. When looking at the classifications that are made we can also clearly see that 
+As mentioned at the start, the game Bloons TD battles 2 contains quite a lot of different genres, as well as a lot of different songs. This makes it an interesting game to do a classification analysis on, as we can test if these songs are not grouped with the others. The songs that are expected to be classified as outliers together are Beyond the Bloondrome and Let them eat Lead as these are metal/rock songs. When looking at the classifications that are made we can also clearly see that these songs are classified as outliers, as they are not grouped with the other songs. This is interesting, as it shows that the classification is working as expected. Another interesting observation in the classification is that in Average and Single linkage the songs "Brutal Behemoth Brothers" and "Pop goes the camo" are not that close together, while in complete linkage they are right next to one another. This is interesting, as it shows that the classification can be quite different depending on the method that is used for these games. 
+
 ``` {r} 
  HTML('<iframe src="https://open.spotify.com/embed/track/75G4yFAvNoDoIt9BkhqhNG", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
  HTML('<iframe src="https://open.spotify.com/embed/track/7lzWjORkoQSnkHCE1zFnzb", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
@@ -429,8 +431,12 @@ column {.sidebar data-width=300}
 -------------------------------------
 
 ### Description
-After doing detailed analysis of the specific game it is an interesting topic for further analysis to see how the base game compares to other games. The most popular other tower defense are Kingdom Rush, and Plants versus Zombies, both games that also use the tower defense mechanic, altough in very different themes. A goal of the analysis is to find similarities between the genres, as well as determine to which game the music of bloons is more closely related. I hypothesise that plants versus zombies will be more similar, as this game is also very relaxing, and boasts a cartoonish and child-friendly style. Kindom rush is more serious, using a medieval fantasy style, with music that fits this style. For these games spotify playlists are available for the first main games in the series, these will be used for analysis, they will be compared to Bloons TD 5 and 6, as these are also the main games in the bloons series. 
+After doing detailed analysis of the specific game it is an interesting topic for further analysis to see how the base game compares to other games. The most popular other tower defense are Kingdom Rush, and Plants versus Zombies, both games that also use the tower defense mechanic, although in very different themes. A goal of the analysis is to find similarities between the genres, as well as determine to which game the music of bloons is more closely related. I hypothesise that plants versus zombies will be more similar, as this game is also very relaxing, and boasts a cartoonish and child-friendly style. Kindom rush is more serious, using a medieval fantasy style, with music that fits this style. For these games spotify playlists are available for the first main games in the series, these will be used for analysis, they will be compared to Bloons TD 5 and 6, as these are also the main games in the bloons series. 
 
+``` {r}
+ HTML('<iframe src="https://open.spotify.com/embed/playlist/0iZmclc8t4SY5V3YHoXa5F", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+ HTML('<iframe src="https://open.spotify.com/embed/playlist/7yzRYGQHgDawyg1cElGITX", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+```
 Column {data-width=300}
 -----------------------------------------------------------------------
 ### Kingdom Rush Frontiers {data-height=300}
@@ -444,50 +450,61 @@ knitr::include_graphics("images/pvzjpg.jpg")
 
 ```
 
-Tempo Analysis
+Other Game Analysis
 ========================
 column {.sidebar data-width=300}
 -------------------------------------
 
 ### Description
 First we will have a look at the tempo of the music for each of the games. As
+the tempo is an important part of the music, it is interesting to see how the tempo between these different games differs, and sets the tone for the rest of the game. Here we can see that specifically Plants vs Zombies has a few games with very high tempo levels, where the other games are centered around 100, this game has multiple songs that have extremely high tempos. This is interesting, as it shows that the music for this game is more fast paced than the other games, perhaps this could be attributed to the fact that this game is quite a bit more tense than the others. This is because in this game your defenses (plants) can actually be destroyed by the zombies, in the other games the only objective is to simply kill the attackers before they get to the end. 
+
+In the next tab the energy and valence analysis can be seen, this once again shows that not all games follow a similar patterns. An especially interesting point here is the valence of PvZ, this is incredibly low, below 0.5 for every single track, where Kindom Rush is the  opposite, with most of the songs having around 0.75 valence. Here the Bloons tracks appear to be more distributed. A similar observation can be done for the energy, where now PvZ has a relatively high energy level, and kingdom rush being on the lower end. This is interesting, as low energy and high valence are generally an uncommon combination. Here once again the bloons tracks are more distributed. 
+
+The main conclusion we can draw from this short comparison to other games is that the conclusions that were made can definitely not be drawn further to other games. This sets the clear validity boundary that we cannot say that the results are genre based, or that Bloons TD 6 represents the tower defense genre. 
 
 
 
-Column {data-width=300}
+
+``` {r} 
+ HTML('<iframe src="https://open.spotify.com/embed/playlist/0iZmclc8t4SY5V3YHoXa5F", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+ HTML('<iframe src="https://open.spotify.com/embed/playlist/7yzRYGQHgDawyg1cElGITX", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+ HTML('<iframe src="https://open.spotify.com/embed/playlist/2lpTXCxSbaSvTBgVrtbdqt", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+    HTML('<iframe src="https://open.spotify.com/embed/playlist/6f9bDISBNqZQ9HVP3TIqUB", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+```
+
+Column {data-width=300 .tabset}
 -----------------------------------------------------------------------
-### Graph1
+### Tempo Analyisis 
+
 
 ```{r graphtempo}
+Tempogram_new_Games <- readRDS("data/Tempogram_new_Games-data.RDS")
 
-awards_5 <-
-ggplot(bind_rows(
-  Monkey_city |> mutate(category = "Bloons Monkey City"),
-  Battles_2 |> mutate(category = "Bloons TD Battles 2"),
-  TD_6 |> mutate(category = "Bloons TD 6"),
-  TD_5 |> mutate(category = "Bloons TD 5")
-),                     # Set up the plot.
-       aes(
-         x = tempo,
-         colour = Game
-       )
-) +
-  geom_histogram() +          # Scatter plot.
-  facet_wrap(~ category) +    # Separate charts per playlist.
-  theme_light() + scale_size_continuous(range = c(3, 5)) +             # Use a simpler theme.
-  labs(                       # Make the titles nice.
-    x = "Tempo",
-    y = "Count",
-    colour = "Game"
-  ) +
-  theme(
-    legend.text = element_text(size = 14),
-    legend.title = element_text(size = 16)
-  )
+plot_grid(Tempogram_new_Games, ncol = 1)
+```
 
-plot_grid(awards_5)
+### Energy and Valence Analysis {.tabset .tabset-dropdown}
+
+```{r energy_valence}
+Energygram_new_Games <- readRDS("data/Energygram_new_Games-data.RDS")
+Valencegram_new_Games <- readRDS("data/Valencegram_new_Games-data.RDS")
+
+plot_grid(Energygram_new_Games, Valencegram_new_Games, ncol = 1)
 
 ```
 
+Conclusions
+========================
+column {.sidebar data-width=500}
+-------------------------------------
+### Conclusions
+In conclusion, it is possible to say that there are definitely some patterns that can be found in the analysis of the corpus. However, as can also be seen in the analysis, it is very difficult to say` that these patterns are unique to the Bloons games, and if they can be attributed to time. The main takeaways that can be stated based on the analysis are that the Bloons games do differ largely in their songs between games. Especially the Battles and Monkey City games are vastly different in terms of genres, energy (for BMC). Looking deeper into the songs there have been some patterns successfully identified, such as the clear sections in the songs, and the use of a lot of repetition. The classification analysis has shown that the songs are quite different from one another in the BTD Battles games, but that songs that are from entirely different genres can be correctly grouped together. For other songs it is still difficult to say what the exact cause of the differences is, as songs can be grouped entirely differently depending on the method. Finally, the comparison with other games has shown that each tower defense game staple has a distinct style. Even in high level features such as tempo, energy and valence, the games are quite different from one another. Which debunks the hypothesis made at the start of the analysis, as each game really creates their own style, without always being calm as was expected. A general conclusion for the project is that even for seemingly simple songs for simple games, there is a lot of depth involved, and further analysis is needed to identify the exact causes and patterns over the years, perhaps including music for other games that the main composer, Tim Haywood has composed. 
 
+In terms of validity, this storyboard does serve the factors of face and construct validity, a clear boundary  has been set at the start for the limitations and assumptions that are made, and the analysis has been done in a way that is clear and understandable. However, the generalizability and therefore external validity of the results is quite low, as the analysis is only done on a small corpus of songs, and only for a few games, and it has also been shown that these conclusions can not necessarily be drawn to other games. In general, an effective framework has been used for the analysis, this can be used in the future to identify what conclusions are applicable for PvZ and KR, which were only shortly mentioned. Finally though, a different goal has also been reached, which is to rekindle some appreciation for the music of the Bloons games, as it is clear that a lot of effort has been put into the music, and that it is not just a simple loop that is played in the background. Based on the positive reactions received from peers throughout the project I can definitely say that this goal has been accomplished. 
 
+column {data-width=500}
+-------------------------------------
+```{r picture_100, echo = F, fig.width=11, fig.height=6.5}
+knitr::include_graphics("images/victory.png")
+```
