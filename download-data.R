@@ -8,16 +8,27 @@ library(leaflet)
 library(leaflet.extras)
 library(cowplot)
 library(stringr)
+library(ggdendro)
+library(heatmaply)
+library(tidymodels)
 
 Monkey_city <- get_playlist_audio_features("", "6KwA52G2dp9P7MWkJY3JUA")
 TD_6 <- get_playlist_audio_features("", "2lpTXCxSbaSvTBgVrtbdqt")
 TD_5 <- get_playlist_audio_features("", "6f9bDISBNqZQ9HVP3TIqUB")
 Battles_2 <- get_playlist_audio_features("", "0AUei7z6FpCCUCsj9QhTCv")
+KR <- get_playlist_audio_features("", "0iZmclc8t4SY5V3YHoXa5F")
+PVZ <- get_playlist_audio_features("", "7yzRYGQHgDawyg1cElGITX")
+TD_6_new <- get_playlist_audio_features("", "2lpTXCxSbaSvTBgVrtbdqt")
+TD_5_new <- get_playlist_audio_features("", "6f9bDISBNqZQ9HVP3TIqUB")
 
 saveRDS(object = Monkey_city,file = "data/Monkey_city-data.RDS")
 saveRDS(object = TD_6,file = "data/TD_6-data.RDS")
 saveRDS(object = TD_5,file = "data/TD_5-data.RDS")
 saveRDS(object = Battles_2,file = "data/Battles_2-data.RDS")
+saveRDS(object = KR,file = "data/KR-data.RDS")
+saveRDS(object = PVZ,file = "data/PVZ-data.RDS")
+saveRDS(object = TD_6_new,file = "data/TD_6_new-data.RDS")
+saveRDS(object = TD_5_new,file = "data/TD_6_new-data.RDS")
 
 bmc_theme <-
   get_tidy_audio_analysis("4FhRB48acntSlHqjnY77Po") |>
@@ -112,19 +123,19 @@ Battles_2$Game <- "Bloons TD Battles 2"
 
 
 awards_5 <-
-ggplot(bind_rows(
-  Monkey_city |> mutate(category = "Bloons Monkey City"),
-  Battles_2 |> mutate(category = "Bloons TD Battles 2"),
-  TD_6 |> mutate(category = "Bloons TD 6"),
-  TD_5 |> mutate(category = "Bloons TD 5")
-),                     # Set up the plot.
-       aes(
-         x = valence,
-         y = energy,
-         size = tempo,
-         colour = Game
-       )
-) +
+  ggplot(bind_rows(
+    Monkey_city |> mutate(category = "Bloons Monkey City"),
+    Battles_2 |> mutate(category = "Bloons TD Battles 2"),
+    TD_6 |> mutate(category = "Bloons TD 6"),
+    TD_5 |> mutate(category = "Bloons TD 5")
+  ),                     # Set up the plot.
+  aes(
+    x = valence,
+    y = energy,
+    size = tempo,
+    colour = Game
+  )
+  ) +
   geom_point() +              # Scatter plot.
   geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
   facet_wrap(~ category) +    # Separate charts per playlist.
@@ -151,18 +162,18 @@ ggplot(bind_rows(
   )
 
 awards <-
-
-
-ggplot(  bind_rows(
-  Monkey_city |> mutate(category = "Bloons Monkey City"),
-),                     # Set up the plot.
-       aes(
-         x = valence,
-         y = energy,
-         size = tempo,
-         colour = loudness
-       )
-) +
+  
+  
+  ggplot(  bind_rows(
+    Monkey_city |> mutate(category = "Bloons Monkey City"),
+  ),                     # Set up the plot.
+  aes(
+    x = valence,
+    y = energy,
+    size = tempo,
+    colour = loudness
+  )
+  ) +
   geom_point() +              # Scatter plot.
   geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
   facet_wrap(~ category) +    # Separate charts per playlist.
@@ -185,20 +196,20 @@ ggplot(  bind_rows(
   )
 
 awards_2 <-
-
-
-
-
-ggplot(  bind_rows(
-  Battles_2 |> mutate(category = "Bloons TD Battles 2"),
-),                     # Set up the plot.
-       aes(
-         x = valence,
-         y = energy,
-         size = tempo,
-         colour = loudness
-       )
-) +
+  
+  
+  
+  
+  ggplot(  bind_rows(
+    Battles_2 |> mutate(category = "Bloons TD Battles 2"),
+  ),                     # Set up the plot.
+  aes(
+    x = valence,
+    y = energy,
+    size = tempo,
+    colour = loudness
+  )
+  ) +
   geom_point() +              # Scatter plot.
   geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
   facet_wrap(~ category) +    # Separate charts per playlist.
@@ -221,19 +232,19 @@ ggplot(  bind_rows(
   )
 
 awards_3 <-
-
-ggplot(  bind_rows(
-  TD_6 |> mutate(category = "Bloons TD 6"),
-)
-
-,                     # Set up the plot.
-       aes(
-         x = valence,
-         y = energy,
-         size = tempo*2,
-         colour = loudness
-       )
-) +
+  
+  ggplot(  bind_rows(
+    TD_6 |> mutate(category = "Bloons TD 6"),
+  )
+  
+  ,                     # Set up the plot.
+  aes(
+    x = valence,
+    y = energy,
+    size = tempo*2,
+    colour = loudness
+  )
+  ) +
   geom_point() +              # Scatter plot.
   geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
   facet_wrap(~ category) +    # Separate charts per playlist.
@@ -256,18 +267,18 @@ ggplot(  bind_rows(
   )
 
 awards_4 <-
-
-ggplot(  bind_rows(
-  TD_5 |> mutate(category = "Bloons TD 5"),
-)
-,                     # Set up the plot.
-       aes(
-         x = valence,
-         y = energy,
-         size = tempo*2,
-         colour = loudness
-       )
-) +
+  
+  ggplot(  bind_rows(
+    TD_5 |> mutate(category = "Bloons TD 5"),
+  )
+  ,                     # Set up the plot.
+  aes(
+    x = valence,
+    y = energy,
+    size = tempo*2,
+    colour = loudness
+  )
+  ) +
   geom_point() +              # Scatter plot.
   geom_rug(linewidth = 0.1) + # Add 'fringes' to show data distribution.
   facet_wrap(~ category) +    # Separate charts per playlist.
@@ -309,7 +320,7 @@ bmc_theme_plot <-
     )
   ) +
   geom_tile() +
-  geom_vline(xintercept = 53, colour = "red") +
+  geom_vline(xintercept = 60, colour = "grey") +
   labs(
     x = "Time (s)", 
     y = NULL, 
@@ -333,7 +344,7 @@ btdb_theme_plot <-
     )
   ) +
   geom_tile() +
-  geom_vline(xintercept = 184, colour = "red") +
+  geom_vline(xintercept = 100, colour = "grey") +
   labs(
     x = "Time (s)", 
     y = NULL, 
@@ -357,7 +368,7 @@ btd5_theme_plot <-
     )
   ) +
   geom_tile() +
-  geom_vline(xintercept = 53, colour = "red") +
+  geom_vline(xintercept = 53, colour = "grey") +
   labs(
     x = "Time (s)", 
     y = NULL, 
@@ -381,7 +392,6 @@ btd6_theme_plot <-
     )
   ) +
   geom_tile() +
-  geom_vline(xintercept = 184, colour = "red") +
   labs(
     x = "Time (s)", 
     y = NULL, 
@@ -797,38 +807,167 @@ btdb_theme_raw <- get_tidy_audio_analysis("73Hvuy9eDRLP719wOOInuv")
 btd6_theme_raw <- get_tidy_audio_analysis("23sMvQBOkqGBtV6CBRWEUf")
 
 btd5_theme_raw <- get_tidy_audio_analysis("5cygoAvx90lrSM1Derm39d")
+# 
+# 
+# bmc_theme_tempogram <- bmc_theme_raw |> tempogram(window_size = 8, hop_size = 1, cyclic = TRUE) |>
+#   ggplot(aes(x = time, y = bpm, fill = power)) +
+#   geom_raster() +
+#   scale_fill_viridis_c(guide = "none") +
+#   labs(x = "Time (s)", y = "Tempo (BPM)", title="Title song, Bloons Monkey City") +
+#   theme_classic()
+# saveRDS(object = bmc_theme_tempogram,file = "data/bmc_theme_tempogram-data.RDS")
+# 
+# btdb_theme_tempogram <- btdb_theme_raw |>tempogram(window_size = 8, hop_size = 1, cyclic = TRUE) |>
+#   ggplot(aes(x = time, y = bpm, fill = power)) +
+#   geom_raster() +
+#   scale_fill_viridis_c(guide = "none") +
+#   labs(x = "Time (s)", y = "Tempo (BPM)", title="Title song, Bloons TD Battles 2") +
+#   theme_classic()
+# 
+# saveRDS(object = btdb_theme_tempogram,file = "data/btdb_theme_tempogram-data.RDS")
+# 
+# btd5_theme_tempogram <- btd5_theme_raw |> tempogram(window_size = 8, hop_size = 1, cyclic = TRUE) |>
+#   ggplot(aes(x = time, y = bpm, fill = power)) +
+#   geom_raster() +
+#   scale_fill_viridis_c(guide = "none") +
+#   labs(x = "Time (s)", y = "Tempo (BPM)", title="Title song, Bloons TD 5") +
+#   theme_classic()
+# saveRDS(object = btd5_theme_tempogram,file = "data/btd5_theme_tempogram-data.RDS")
+# 
+# btd6_theme_tempogram <- btd6_theme_raw |> tempogram(window_size = 8, hop_size = 1, cyclic = TRUE) |>
+#   ggplot(aes(x = time, y = bpm, fill = power)) +
+#   geom_raster() +
+#   scale_fill_viridis_c(guide = "none") +
+#   labs(x = "Time (s)", y = "Tempo (BPM)", title="Title song, Bloons TD 6") +
+#   theme_classic()
+# 
+# saveRDS(object = btd6_theme_tempogram,file = "data/btd6_theme_tempogram-data.RDS")
 
 
-bmc_theme_tempogram <- bmc_theme_raw |> tempogram(window_size = 8, hop_size = 1, cyclic = TRUE) |>
-  ggplot(aes(x = time, y = bpm, fill = power)) +
-  geom_raster() +
-  scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)", title="Title song, Bloons Monkey City") +
-  theme_classic()
-saveRDS(object = bmc_theme_tempogram,file = "data/bmc_theme_tempogram-data.RDS")
+get_conf_mat <- function(fit) {
+  outcome <- .get_tune_outcome_names(fit)
+  fit |>
+    collect_predictions() |>
+    conf_mat(truth = outcome, estimate = .pred_class)
+}
 
-btdb_theme_tempogram <- btdb_theme_raw |>tempogram(window_size = 8, hop_size = 1, cyclic = TRUE) |>
-  ggplot(aes(x = time, y = bpm, fill = power)) +
-  geom_raster() +
-  scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)", title="Title song, Bloons TD Battles 2") +
-  theme_classic()
+get_pr <- function(fit) {
+  fit |>
+    conf_mat_resampled() |>
+    group_by(Prediction) |> mutate(precision = Freq / sum(Freq)) |>
+    group_by(Truth) |> mutate(recall = Freq / sum(Freq)) |>
+    ungroup() |> filter(Prediction == Truth) |>
+    select(class = Prediction, precision, recall)
+}
 
-saveRDS(object = btdb_theme_tempogram,file = "data/btdb_theme_tempogram-data.RDS")
+Battles_2$`track.name` <- paste0(Battles_2$`track.name`, "_", seq_len(nrow(Battles_2)))
 
-btd5_theme_tempogram <- btd5_theme_raw |> tempogram(window_size = 8, hop_size = 1, cyclic = TRUE) |>
-  ggplot(aes(x = time, y = bpm, fill = power)) +
-  geom_raster() +
-  scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)", title="Title song, Bloons TD 5") +
-  theme_classic()
-saveRDS(object = btd5_theme_tempogram,file = "data/btd5_theme_tempogram-data.RDS")
+halloween <-
+  Battles_2  |>
+  add_audio_analysis() |>
+  mutate(
+    segments = map2(segments, key, compmus_c_transpose),
+    pitches =
+      map(segments,
+          compmus_summarise, pitches,
+          method = "mean", norm = "manhattan"
+      ),
+    timbre =
+      map(
+        segments,
+        compmus_summarise, timbre,
+        method = "mean"
+      )
+  ) |>
+  mutate(pitches = map(pitches, compmus_normalise, "clr")) |>
+  mutate_at(vars(pitches, timbre), map, bind_rows) |>
+  unnest(cols = c(pitches, timbre))
 
-btd6_theme_tempogram <- btd6_theme_raw |> tempogram(window_size = 8, hop_size = 1, cyclic = TRUE) |>
-  ggplot(aes(x = time, y = bpm, fill = power)) +
-  geom_raster() +
-  scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)", title="Title song, Bloons TD 6") +
-  theme_classic()
 
-saveRDS(object = btd6_theme_tempogram,file = "data/btd6_theme_tempogram-data.RDS")
+
+halloween_juice <-
+  recipe(
+    track.name ~
+      danceability +
+      energy +
+      loudness +
+      speechiness +
+      acousticness +
+      instrumentalness +
+      liveness +
+      valence +
+      tempo +
+      duration +
+      C + `C#|Db` + D + `D#|Eb` +
+      E + `F` + `F#|Gb` + G +
+      `G#|Ab` + A + `A#|Bb` + B +
+      c01 + c02 + c03 + c04 + c05 + c06 +
+      c07 + c08 + c09 + c10 + c11 + c12,
+    data = halloween
+  ) |>
+  step_center(all_predictors()) |>
+  step_scale(all_predictors()) |>
+  # step_range(all_predictors())
+  prep(halloween |> mutate(track.name = str_trunc(track.name, 20000))) |>
+  juice() |>
+  column_to_rownames("track.name")
+
+halloween_dist_1 <- dist(halloween_juice, method = "euclidean")
+halloween_dist_1_plot <-
+halloween_dist_1 |>
+  hclust(method = "single") |> # Try single, average, and complete.
+  dendro_data() |>
+  ggdendrogram() +
+  labs(title="Single linkage")
+
+halloween_dist_2 <- dist(halloween_juice, method = "euclidean")
+
+halloween_dist_2_plot <-
+halloween_dist_2 |>
+  hclust(method = "average") |> # Try single, average, and complete.
+  dendro_data() |>
+  ggdendrogram() +
+  labs(title="Average linkage")
+
+halloween_dist_3 <- dist(halloween_juice, method = "euclidean")
+
+halloween_dist_3_plot <-
+  halloween_dist_3 |>
+  hclust(method = "complete") |> # Try single, average, and complete.
+  dendro_data() |>
+  ggdendrogram() +
+  labs(title="Complete linkage")
+
+saveRDS(object = halloween_dist_1_plot,file = "data/halloween_dist_1-data.RDS")
+saveRDS(object = halloween_dist_2_plot,file = "data/halloween_dist_2-data.RDS")
+saveRDS(object = halloween_dist_3_plot,file = "data/halloween_dist_3-data.RDS")
+
+
+
+Tempogram_new_Games <-
+  ggplot(bind_rows(
+    KR |> mutate(category = "Bloons Monkey City"),
+    PVZ |> mutate(category = "Bloons TD Battles 2"),
+    TD_6 |> mutate(category = "Bloons TD 6"),
+    TD_5 |> mutate(category = "Bloons TD 5")
+  ),                     # Set up the plot.
+  aes(
+    x = tempo,
+    colour = Game
+  )
+  ) +
+  geom_histogram() +          # Scatter plot.
+  facet_wrap(~ category) +    # Separate charts per playlist.
+  theme_light() + scale_size_continuous(range = c(3, 5)) +             # Use a simpler theme.
+  labs(                       # Make the titles nice.
+    x = "Tempo",
+    y = "Count",
+    colour = "Game"
+  ) +
+  theme(
+    legend.text = element_text(size = 14),
+    legend.title = element_text(size = 16)
+  )
+
+plot_grid(awards_5)
+

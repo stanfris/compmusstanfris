@@ -31,11 +31,16 @@ Monkey_city <- readRDS("data/Monkey_city-data.RDS")
 TD_6 <- readRDS("data/TD_6-data.RDS")
 TD_5 <- readRDS("data/TD_5-data.RDS")
 Battles_2 <- readRDS("data/Battles_2-data.RDS")
+KR <- readRDS("data/KR-data.RDS")
+PVZ <- readRDS("data/PVZ-data.RDS")
 
 Monkey_city$Game <- "Bloons Monkey City"
 TD_6$Game <- "Bloons TD 6"
 TD_5$Game <- "Bloons TD 5"
 Battles_2$Game <- "Bloons TD Battles 2"
+KR$Game <- "Kingdom Rush Frontiers"
+PVZ$Game <- "Plants versus Zombies"
+
 
 full_set <- rbind(Monkey_city, TD_6, TD_5, Battles_2)
 ```
@@ -70,7 +75,7 @@ knitr::include_graphics("images/btd_battles_2.jpg")
 Column {.sidebar data-width=400}
 -------------------------------------
 ### Description
-The corpus that I have chosen will be a collection of songs used in the Bloons Tower Defense (BTD) videogame series. It is a tower defense strategy game where players strategically deploy towers to prevent balloons from reaching the end of a predetermined path. The game is catered towards all ages. A battles version also exists, where players compete against other players. Songs have been collected from BTD5, BTD6, Bloons Monkey City, and BTD Battles 2, BTD Battles 1 also exists, but uses music from BTD5. The natural comparison groups here are the different games, and how they compare against one another, as they have all been composed by the same composer it offers interesting perspective into how the general game has changed over time, and what changes in music composition are made for different modes of play. The corpus is completely filled, with all songs available on spotify, however the music from earlier games does not exist in spotify, therefore the music for games BTD 1-4 is not available. There are several genres used within the music, which means that it might be difficult to compare songs from a genre that occurs only once in the corpus. Examples of these are "Beyond the Bloondrome" and "Let them eat Lead", as these are metal/rock songs, as well as "Onslaught" and "Primal One", which contain very uptempo music meant for Boss encounters. The most typical songs are the main "theme" songs of the games, as these convey the general tone the composer attempted to set for each game.
+The corpus that I have chosen will be a collection of songs used in the Bloons Tower Defense (BTD) videogame series. It is a tower defense strategy game where players strategically deploy towers to prevent balloons from reaching the end of a predetermined path. The game is catered towards all ages. A battles version also exists, where players compete against other players. Songs have been collected from BTD5, BTD6, Bloons Monkey City, and BTD Battles 2, BTD Battles 1 also exists, but uses music from BTD5. The natural comparison groups here are the different games, and how they compare against one another, as they have all been composed by the same composer it offers interesting perspective into how the general game has changed over time, and what changes in music composition are made for different modes of play. The corpus is completely filled, with all songs available on spotify, however the music from earlier games does not exist in spotify, therefore the music for games BTD 1-4 is not available. There are several genres used within the music, which means that it might be difficult to compare songs from a genre that occurs only once in the corpus. Examples of these are "Beyond the Bloondrome" and "Let them eat Lead", as these are metal/rock songs, as well as "Onslaught" and "Primal One", which contain very uptempo music meant for Boss encounters. The most typical songs are the main "theme" songs of the games, as these convey the general tone the composer attempted to set for each game. Interesting further songs for analysis are the main theme songs, as these are generally the most expressive songs that set the tone for the rest of the game, it is interesting to see how they compare. Finally, the Tower Defense genre has 3 main games, in a final part of the analysis we will compare Bloons to the other staples of the genre, Plants versus Zombies and Kingdom Rush. For these games all music is available on spotify. 
 
 
 Overview per Game
@@ -79,7 +84,8 @@ Overview per Game
 Column {.sidebar data-width=300}
 -------------------------------------
 ### Description
-For this the image plots can be observed for all games, showing how all of , it contains a detailed plot showing the energy and valence of the songs for each game that will be investigated. It offers interesting insight in showing that there is clearly a very positive tone in all songs. It shows that especially the battles and TD 5 songs contain a lot of high-energy high-valence songs. There is a larger distribution in the songs for bloons monkey city
+For this the image plots can be observed for all games, showing how all of , it contains a detailed plot showing the energy and valence of the songs for each game that will be investigated. It offers interesting insight in showing that there is clearly a very positive tone in all songs in . It shows that especially the battles and TD 5 songs contain a lot of high-energy high-valence songs. There is a larger distribution in the songs for bloons monkey city, with especially a lot of songs in the low energy category. All other games contain music that at least has positive energy. Tempo is best visible when looking at the specific plots by clicking on the tabs, here we can see that Bloons TD 5 and TD 6 have far higher tempos for the songs, even being on an entirely different scale. Especially Bloons TD 5 is said to have a very high tempo for all songs, this might not entirely be correct, as we will see when looking at the specific tempograms for one of the songs in BTD 5. Finally the loudness of the songs, when looking at the specific graphs, we can see that Bloons TD battles and Bloons TD 6 have the loudest songs, with Bloons Monkey City and Bloons TD 5 having a lot of songs in the lower loudness category. These findings in tempo and loudness suggest that a difference between the games might be that to accomodate the calmer nature of BMC, the songs have lower tempo and loudness. The more action packed Battles 2 clearly has more high-energy happy songs, with higher loudness and tempo. An interesting note here is that Battles 2 is outperformed in tempo in most songs by Bloons TD 5 as well as TD 6. Now we will have a look at some details for the main theme songs, as these might offer some interesting insights. 
+
 
 ``` {r} 
  HTML('<iframe src="https://open.spotify.com/embed/playlist/2lpTXCxSbaSvTBgVrtbdqt", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
@@ -132,7 +138,7 @@ plot_grid(awards_4, ncol = 1)
 
 
 
-Details
+Theme Songs Analysis
 =====================================
 
 Column {.sidebar data-width=500}
@@ -140,7 +146,17 @@ Column {.sidebar data-width=500}
 ### Description
 First, it is important to have a look at what can be considered the most important points of the game, the title song. It is the song that players will remember the most, and that they will strongly associate with the game. This section will investigate key components for the title songs of Bloons games. First of all the two main games, Bloons TD 5, and Bloons TD 6. As can be seen in the chromatogram, there is quite a big difference in complexity in the two games. The TD 5 song is quite simple, with a lot of repetition, and a very clear melody. The TD 6 song is much more complex, with a lot of different melodies and harmonies. The TD 6 song also has a lot more variation in the chroma, with a lot of different pitches being used, as well as an increase in tempo. This is interesting, as it shows that the composer has chosen to make the song much more complex, and much more varied. The title song for Bloons TD 5 has a lot of repetition, repeating the marimba melody between 15-30, 35-50 and 100-115 second. The major twist in this track is around 50 seconds, where all instruments are replaced by a flute. The flute stops at 100 seconds, where the old instruments come back. 
 
-The title song for Bloons TD 6 has a lot of variation, with a lot of different melodies and harmonies. The song is much more complex, with a lot of different pitches being used, as well as an increase in tempo. The song is also much longer, with a duration of 4 minutes, compared to the 2 minutes of the TD 5 song. It does follow the same repetition of instruments, with a similar shift at around 100 seconds, where the instruments are replaced by a flute, this continues until 150 seconds, but in contrast to the BTD 5 theme the instruments all slowly join back in, and keep playing. 
+The title song for Bloons TD 6 has a lot of variation, with a lot of different melodies and harmonies. The song is much more complex, with a lot of different pitches being used, as well as an increase in tempo. The song is also much longer, with a duration of 4 minutes, compared to the 2 minutes of the TD 5 song. It does follow the same repetition of instruments, with a similar shift at around 100 seconds, where the instruments are replaced by a flute, this continues until 150 seconds, but in contrast to the BTD 5 theme the instruments all slowly join back in, and keep playing.
+
+For the main theme song of Bloons Monkey City, which is called "Street Party", there are some visible interesting patterns. We can see the song slowly builds up to a main repeating part of the track, which is finished at around 30 seconds. After that at the 60 second mark, the song has a part that is very similar to the BTD 5 theme song, where all instruments are replaced by a flute, after which the other elements slowly come back. It is interesting to see that although the tempo of the songs is very different, they do follow a similar pattern. 
+
+Bloons TD Battles 2 has a very different theme song, with several unique parts that are repeated throughout the song. The song has an introduction which runs until around 10 seconds, after which a very active section, which I will refer to as A is played, this is replaced at 25 seconds by a longer section B that has a lot of repetition, at around 50 seconds we once again see section A play, which is then again replaced by section B at 75 seconds. At 100 seconds we see a unique section play that can be seen as a buildup to the alternate version of section A, which contains a horn instrument, after that the regular version of section A is played again, until it fades out at the end of the song. These clear sections should be very visible in the chroma and timbre self-similarity plots. 
+
+In general what we can see is that the songs have a very similar buildup, with simple tones, and multiple songs having a moment where the music falls away and is replaced by different instruments. A possible explanation for this is that the songs are meant for the title screen, where the use of a lot of repetition makes it recognizable, and the falling away and having clear parts re-attracts the attention of the player after they have not responded for a while. After all, spending more than 60 seconds on the title screen of a game is quite some time. 
+
+
+ 
+
 
 ``` {r} 
  HTML('<iframe src="https://open.spotify.com/embed/track/23sMvQBOkqGBtV6CBRWEUf", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
@@ -169,14 +185,18 @@ btd6_theme_plot <- readRDS("data/btd6_theme_plot-data.RDS")
 plot_grid(bmc_theme_plot, btdb_theme_plot, btd5_theme_plot, btd6_theme_plot, ncol = 1)
 ```
 
-New 
+Theme Song Details 
 =====================================
 
-column {.sidebar data-width=300}
+column {.sidebar data-width=400}
 -------------------------------------
 ### Description
-In this section more details on each song are shown 
+In this section more details on each song are shown. First of all the self similarity plots, which show how similar the song is to itself. This is interesting as it shows how much repetition is in the song, and what variation there is. First of all for Street Party (BMC), here we can see that is a slight checkerboard pattern visible in the chromagram. However when we look at the timbre diagram we can see this especially clearly, are very different from one another, except for the second and fourth part, as they are the same. Battles 2 shows the previously discussed patterns clearly in the chromagram, although the diagram most clearly shows the smaller scale repetition patterns. The final interesting pattern can be seen in BTD 5, where the song can be divided up into 3 clear parts, where the first and last part are very similar, and the middle (flute) part is very different. 
 
+When moving to the next section we can see the chord analyis for each theme song. There are some interesting patterns visible here, especially in the BTD 5 song, where we can see that the song is mostly in the key of C. he BTD 6 song is also mostly in the key of C. The BMC theme is difficult to distinguish, but appears to be in the A key. The key of the title song for Battles 2 can not be identified, possibly due to the high tempo or lack of a clear main instrument, which is present in the other songs. The chordograms on the next page confirm the hypotheses for BTD 6 and BTD 5, as they are still shown to be in the C key. The BMC theme appears to be based around C-sharp, so this required some extra analyis, when looking at the classification by chordify it is stated to be in the key of A, which is a very close key to C-sharp. The Battles 2 theme is still difficult to classify, as it is not clear what the main key is, however it seems that F major would be the right fit, interestingly chordify classifies this song as being in the D key.
+
+Finally, the tempograms show all songs have a very identifiable tempo throughout the entire song, likely due to the many drum-type instruments that are used in the songs. The tempo is relatively normal for all songs, however we can clearly see that the more active games, BMC and Battles 2 have substantially higher tempos, at around 130 for these songs, and 105 for BTD 5 and 6. 
+ 
 ``` {r} 
  HTML('<iframe src="https://open.spotify.com/embed/track/23sMvQBOkqGBtV6CBRWEUf", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
  HTML('<iframe src="https://open.spotify.com/embed/track/4FhRB48acntSlHqjnY77Po", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
@@ -374,91 +394,31 @@ plot_grid(bmc_tempogram, btdb_tempogram,btd5_tempogram, btd6_tempogram, ncol = 2
 
 ```
 
-Classification Analysis For Bloons TD Battles
+Classification Analysis for battles 2
 ========================
 
 column {.sidebar data-width=300}
 ---------------------------------------------------------------------
 ### Description
-  As discussed at the start, Bloons Monkey City has quite a few songs that are in different areas when it comes to valence and energy This section will investigate the classification of the songs, and see if it is able to distinguish different types.
+As mentioned at the start, the game Bloons TD battles 2 contains quite a lot of different genres, as well as a lot of different songs. This makes it an interesting game to do a classification analysis on, as we can test if these songs are not grouped with the others. The songs that are expected to be classified as outliers together are Beyond the Bloondrome and Let them eat Lead as these are metal/rock songs. When looking at the classifications that are made we can also clearly see that 
+``` {r} 
+ HTML('<iframe src="https://open.spotify.com/embed/track/75G4yFAvNoDoIt9BkhqhNG", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+ HTML('<iframe src="https://open.spotify.com/embed/track/7lzWjORkoQSnkHCE1zFnzb", width="100%" height="170" frameBorder="0" allowtransparency="true" allow="encrypted-media" data-external="1"></iframe>')
+```
 
 
-Column {data-width=1000}
+Column {data-width=1000, tabset}
 -----------------------------------------------------------------------
 
-
+### Classification Analysis {.tabset .tabset-dropdown}
 
 ```{r}
-get_conf_mat <- function(fit) {
-  outcome <- .get_tune_outcome_names(fit)
-  fit |> 
-    collect_predictions() |> 
-    conf_mat(truth = outcome, estimate = .pred_class)
-}  
+halloween_dist_1 <- readRDS("data/halloween_dist_1-data.RDS")
+halloween_dist_2 <- readRDS("data/halloween_dist_2-data.RDS")
+halloween_dist_3 <- readRDS("data/halloween_dist_3-data.RDS")
 
-get_pr <- function(fit) {
-  fit |> 
-    conf_mat_resampled() |> 
-    group_by(Prediction) |> mutate(precision = Freq / sum(Freq)) |> 
-    group_by(Truth) |> mutate(recall = Freq / sum(Freq)) |> 
-    ungroup() |> filter(Prediction == Truth) |> 
-    select(class = Prediction, precision, recall)
-}  
 
-halloween <-
-  TD_6 |>
-  add_audio_analysis() |>
-  mutate(
-    segments = map2(segments, key, compmus_c_transpose),
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "mean", norm = "manhattan"
-      ),
-    timbre =
-      map(
-        segments,
-        compmus_summarise, timbre,
-        method = "mean"
-      )
-  ) |>
-  mutate(pitches = map(pitches, compmus_normalise, "clr")) |>
-  mutate_at(vars(pitches, timbre), map, bind_rows) |>
-  unnest(cols = c(pitches, timbre))
-
-halloween_juice <-
-  recipe(
-    track.name ~
-      danceability +
-      energy +
-      loudness +
-      speechiness +
-      acousticness +
-      instrumentalness +
-      liveness +
-      valence +
-      tempo +
-      duration +
-      C + `C#|Db` + D + `D#|Eb` +
-      E + `F` + `F#|Gb` + G +
-      `G#|Ab` + A + `A#|Bb` + B +
-      c01 + c02 + c03 + c04 + c05 + c06 +
-      c07 + c08 + c09 + c10 + c11 + c12,
-    data = halloween
-  ) |>
-  step_center(all_predictors()) |>
-  step_scale(all_predictors()) |> 
-  # step_range(all_predictors()) |> 
-  prep(halloween |> mutate(track.name = str_trunc(track.name, 20))) |>
-  juice() |>
-  column_to_rownames("track.name")
-
-halloween_dist <- dist(halloween_juice, method = "euclidean")
-
-halloween_dist |> 
-  hclust(method = "single") |> # Try single, average, and complete.
-  dendro_data() |>
-  ggdendrogram()
+plot_grid(halloween_dist_1, NULL, halloween_dist_2, NULL, halloween_dist_3, ncol = 5, rel_widths = c(1.3, 0.4, 1.3, 0.4, 1.3))
 ```
 
 
