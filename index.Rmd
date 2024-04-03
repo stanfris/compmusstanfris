@@ -95,7 +95,7 @@ For this the image plots can be observed for all games, showing how all of , it 
 ```
 
 
-column {data-width=1000}
+column {data-width=1000 .tabset}
 -----------------------------------------------------------------------
 
 ### All Games
@@ -108,7 +108,7 @@ plot_grid(awards_5, ncol = 1)
 
 
 
-### Bloons Monkey City 
+### Bloons Monkey City {.tabset .tabset-dropdown}
 
 ```{r static_plot, fig.width=10, fig.height=6}
 awards <- readRDS("data/awards-data.RDS")
@@ -505,6 +505,6 @@ In terms of validity, this storyboard does serve the factors of face and constru
 
 column {data-width=500}
 -------------------------------------
-```{r picture_100, echo = F, fig.width=11, fig.height=6.5}
+```{r picture_100, echo = F, fig.width=10.5, fig.height=6.5}
 knitr::include_graphics("images/victory.png")
 ```
